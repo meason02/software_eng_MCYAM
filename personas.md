@@ -1,5 +1,5 @@
 ## Personas ##
-### 1. The Proactive Giver: Sarah (The "Over-Shopper" )###
+### 1. The Proactive Giver: Sarah (The "Over-Shopper" ) ###
 Background: 34, busy marketing manager living in a suburban area. 
 Motivation: Feels guilty throwing away perfectly good produce or leftovers after hosting weekend dinners. 
 Pain Points: Finds existing donation processes too formal; wants a quick way to ensure food doesn't go to waste without the hassle of "selling." 
