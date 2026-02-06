@@ -13,55 +13,60 @@ Mark when food has been picked up
 
 The design focuses on being fast to use, easy to understand, and helpful for people with different levels of technical confidence. Whether someone is giving away a single home‑cooked meal, a café is offering leftover pastries at the end of the day, or a family is sharing extra groceries — the platform supports it in a clean and accessible way.
 
-## MVP (Sprint direction)
-- Create a food listing (what it is, quantity, pickup window)
-- Browse listings
-- Mark listing as collected
+Key Features
+Create Food Listings
+Allows users to quickly upload information about surplus food, including:
 
-## Tech stack
-- Node.js + Express
-- MySQL
-- PUG (templates)
-- Docker / Docker Compose
+Item name
+Quantity
+Category
+Pickup window
+Optional notes (allergy information, preparation details)
 
-## Run with Docker
-1. Clone the repo
-2. Run:
-   docker compose up --build
-3. Open:
-   http://localhost:3000
+This feature is ideal for both individuals and small businesses who want a fast, low‑effort listing process.
 
-## Team
-- Meason Silveira
-- Calvin Dsouza
-- Alvan Chukwuani
-- Mohammad Yusuf Kapadia
-- Marcica Cercel
+Browse Available Food
+Visitors can easily search and filter available items:
 
-## Links
-- GitHub repo: <YOUR REPO LINK>
-- Task board: <YOUR PROJECT LINK>
-Commit:
-•	Customise README for food waste project
-______________
-5) Every member can run the dev environment using Docker (prove it) 
-we all need to do this
-This is the most misunderstood requirement: it’s about proof.
-Step-by-step
-1.	From repo root:
-2.	docker compose down
-3.	docker compose up --build
-4.	Open browser:
-o	http://localhost:3000
-5.	Take screenshots:
-o	Docker Desktop showing container running
-o	Browser showing the “Docker is running ✅” page
-Evidence file (optional but strong)
-Create DOCKER.md:
-## Docker quickstart
-docker compose up --build
-Open http://localhost:3000
-Each teammate should run it and ideally add their initials to a line in DOCKER.md like:
-•	“Tested by: Meason, Calvin, Alvan, Yusuf, Marcica”
-That’s a simple “audit trail” for the assessor.
-______________
+View nearby food
+Filter by category
+Check availability time
+See collection instructions
+
+The browsing experience is designed for clarity and speed, helping users make decisions quickly and without confusion.
+
+Mark Food as Collected
+Once the food has been picked up:
+
+The lister can mark it as collected
+The item is removed from active listings
+This keeps the platform up‑to‑date and reliable
+
+
+Simple, Friendly Interface
+The platform uses:
+
+Clear wording
+Straightforward navigation
+Minimal steps
+Mobile‑friendly views
+
+This ensures accessibility for users who may not be confident with complex digital systems.
+
+Support for Community Values
+The platform emphasises:
+
+Sharing without stigma
+Transparency and trust
+Safety in pickup arrangements
+Encouraging sustainable habits
+
+This helps create a welcoming community environment.
+
+Tech Stack
+
+Node.js + Express for server logic
+MySQL for storing listings and user data
+PUG templating engine for clean, simple pages
+Docker & Docker Compose for consistent development setup
+GitHub Actions for basic continuous integration
