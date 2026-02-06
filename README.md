@@ -1,9 +1,17 @@
 # Food Waste Management – Community Sharing App
+A community‑focused web application designed to reduce food waste by enabling people to share surplus food quickly, safely, and conveniently. The platform supports individuals, families, students, and small businesses who may either have extra food to give away or need access to affordable options.
 
-A web app to reduce food waste by helping people share surplus food locally in a safe, respectful way.
 
 ## Project description
-Food waste happens in homes and small businesses when plans change or food is overbought. At the same time, people in the same community may struggle with food costs. This project focuses on a community-based way to list surplus food and arrange collection.
+Across many households and small food businesses, surplus food is often thrown away despite still being fresh and edible. At the same time, others in the community — such as students, people on tight budgets, and families — may struggle to access affordable meals.
+This application provides a simple, approachable solution by allowing users to:
+
+List surplus food with clear details
+Browse available items nearby
+Arrange quick, safe collection
+Mark when food has been picked up
+
+The design focuses on being fast to use, easy to understand, and helpful for people with different levels of technical confidence. Whether someone is giving away a single home‑cooked meal, a café is offering leftover pastries at the end of the day, or a family is sharing extra groceries — the platform supports it in a clean and accessible way.
 
 ## MVP (Sprint direction)
 - Create a food listing (what it is, quantity, pickup window)
