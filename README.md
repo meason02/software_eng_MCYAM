@@ -65,8 +65,8 @@ This helps create a welcoming community environment.
 
 ## Tech Stack
 
-Node.js + Express for server logic
-MySQL for storing listings and user data
-PUG templating engine for clean, simple pages
-Docker & Docker Compose for consistent development setup
+- Node.js + Express for server logic
+- MySQL for storing listings and user data
+- PUG templating engine for clean, simple pages
+- Docker & Docker Compose for consistent development setup
 GitHub Actions for basic continuous integration
