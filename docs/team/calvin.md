@@ -73,3 +73,14 @@ Actions:
 	•	Assign backlog items to sprint – Alvan
 	•	Review backlog for scope suitability – Calvin
 	•	Screenshot Kanban board for evidence – Yusuf
+
+Meeting Record 3
+
+Date and Time:
+3 February 2026, 11:00 – 12:00
+
+Project Name:
+Software Engineering MCMAY
+
+Meeting Goal:
+Set up and verify Docker development environment
