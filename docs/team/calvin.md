@@ -38,7 +38,7 @@ Actions:
 	•	Everyone to make an initial commit – All members
 
 
-Meeting Record 2
+## Meeting Record 2
 
 Date and Time:
 30 January 2026, 15:30 – 16:30
@@ -74,7 +74,7 @@ Actions:
 	•	Review backlog for scope suitability – Calvin
 	•	Screenshot Kanban board for evidence – Yusuf
 
-Meeting Record 3
+## Meeting Record 3
 
 Date and Time:
 3 February 2026, 11:00 – 12:00
