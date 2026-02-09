@@ -36,3 +36,15 @@ Actions:
 	•	Create GitHub repository – Calvin
 	•	Add all members to repository – Alvan
 	•	Everyone to make an initial commit – All members
+
+
+Meeting Record 2
+
+Date and Time:
+30 January 2026, 15:30 – 16:30
+
+Project Name:
+Software Engineering MCMAY
+
+Meeting Goal:
+Set up GitHub project board and product backlog
