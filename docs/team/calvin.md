@@ -11,3 +11,12 @@ Software Engineering MCMAY
 
 Meeting Goal:
 Agree project idea, group name, and code of conduct
+
+Facilitator:
+Calvin
+
+Note taker:
+Alvan
+
+Attendees:
+Calvin, Meason, Alvan, Yusuf, Marcica
