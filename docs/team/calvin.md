@@ -26,3 +26,7 @@ Roundtable Updates:
 	•	Alvan: Reviewed example project ideas from the brief
 	•	Yusuf: Considered technical feasibility of proposed ideas
 	•	Marcica: Reviewed ethical considerations for food sharing
+Discussion Points:
+	•	Agreed project focus on minimising food waste by sharing excess food
+	•	Discussed expectations for teamwork and communication
+	•	Drafted initial code of conduct rules
