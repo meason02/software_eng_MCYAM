@@ -25,7 +25,7 @@ Allows users to quickly upload information about surplus food, including:
 
 This feature is ideal for both individuals and small businesses who want a fast, low‑effort listing process.
 
-## Browse Available Food
+# Browse Available Food
 Visitors can easily search and filter available items:
 
 - View nearby food
@@ -35,7 +35,7 @@ Visitors can easily search and filter available items:
 
 The browsing experience is designed for clarity and speed, helping users make decisions quickly and without confusion.
 
-## Mark Food as Collected
+# Mark Food as Collected
 Once the food has been picked up:
 
 - The lister can mark it as collected
@@ -43,7 +43,7 @@ Once the food has been picked up:
 - This keeps the platform up‑to‑date and reliable
 
 
-## Simple, Friendly Interface
+# Simple, Friendly Interface
 The platform uses:
 
 - Clear wording
@@ -53,7 +53,7 @@ The platform uses:
 
 This ensures accessibility for users who may not be confident with complex digital systems.
 
-## Support for Community Values
+# Support for Community Values
 The platform emphasises:
 
 - Sharing without stigma
