@@ -67,3 +67,9 @@ Discussion Points:
 	•	Defined initial backlog items for the application
 	•	Agreed Kanban board columns (To Do, In Progress, Review, Done)
 	•	Assigned priorities to core features
+
+Actions:
+	•	Finalise product backlog – Meason
+	•	Assign backlog items to sprint – Alvan
+	•	Review backlog for scope suitability – Calvin
+	•	Screenshot Kanban board for evidence – Yusuf
