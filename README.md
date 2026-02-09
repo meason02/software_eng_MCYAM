@@ -6,7 +6,7 @@ A community‑focused web application designed to reduce food waste by enabling 
 Across many households and small food businesses, surplus food is often thrown away despite still being fresh and edible. At the same time, others in the community — such as students, people on tight budgets, and families — may struggle to access affordable meals.
 This application provides a simple, approachable solution by allowing users to:
 
-**List surplus food with clear details**
+List surplus food with clear details
 Browse available items nearby
 Arrange quick, safe collection
 Mark when food has been picked up
@@ -15,7 +15,7 @@ The design focuses on being fast to use, easy to understand, and helpful for peo
 
 ## Key Features
 Create Food Listings
-**Allows users to quickly upload information about surplus food, including:**
+Allows users to quickly upload information about surplus food, including:
 
 Item name
 Quantity
