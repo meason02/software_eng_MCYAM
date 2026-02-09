@@ -63,3 +63,7 @@ Roundtable Updates:
 	•	Yusuf: Reviewed user story format
 	•	Marcica: Checked Sprint 1 checklist requirements
 
+Discussion Points:
+	•	Defined initial backlog items for the application
+	•	Agreed Kanban board columns (To Do, In Progress, Review, Done)
+	•	Assigned priorities to core features
