@@ -56,4 +56,10 @@ Yusuf
 
 Attendees:
 Calvin, Meason, Alvan, Yusuf, Marcica
+Roundtable Updates:
+	•	Calvin: GitHub repository created and shared
+	•	Meason: Drafted initial feature ideas
+	•	Alvan: Set up GitHub Project Kanban board
+	•	Yusuf: Reviewed user story format
+	•	Marcica: Checked Sprint 1 checklist requirements
 
