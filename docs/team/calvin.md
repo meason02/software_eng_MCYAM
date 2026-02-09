@@ -103,3 +103,9 @@ Discussion Points:
 	•	Confirmed Docker runs on all group members’ machines
 	•	Discussed environment variable handling
 	•	Identified minor setup issues and fixes
+	
+Actions:
+	•	Fix remaining Docker issues – Yusuf
+	•	Finalise README Docker section – Alvan
+	•	Verify all members can run containers – Meason
+	•	Prepare Sprint 1 PDF submission – Calvin
