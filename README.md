@@ -6,10 +6,10 @@ A community‑focused web application designed to reduce food waste by enabling 
 Across many households and small food businesses, surplus food is often thrown away despite still being fresh and edible. At the same time, others in the community — such as students, people on tight budgets, and families — may struggle to access affordable meals.
 This application provides a simple, approachable solution by allowing users to:
 
-List surplus food with clear details
-Browse available items nearby
-Arrange quick, safe collection
-Mark when food has been picked up
+- List surplus food with clear details
+- Browse available items nearby
+- Arrange quick, safe collection
+- Mark when food has been picked up
 
 The design focuses on being fast to use, easy to understand, and helpful for people with different levels of technical confidence. Whether someone is giving away a single home‑cooked meal, a café is offering leftover pastries at the end of the day, or a family is sharing extra groceries — the platform supports it in a clean and accessible way.
 
