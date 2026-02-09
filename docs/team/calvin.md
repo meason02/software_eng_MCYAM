@@ -30,3 +30,9 @@ Discussion Points:
 	•	Agreed project focus on minimising food waste by sharing excess food
 	•	Discussed expectations for teamwork and communication
 	•	Drafted initial code of conduct rules
+
+Actions:
+	•	Write final code of conduct – Marcica
+	•	Create GitHub repository – Calvin
+	•	Add all members to repository – Alvan
+	•	Everyone to make an initial commit – All members
