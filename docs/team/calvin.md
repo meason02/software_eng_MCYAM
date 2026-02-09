@@ -19,3 +19,10 @@ Alvan
 
 Attendees:
 Calvin, Meason, Alvan, Yusuf, Marcica
+
+Roundtable Updates:
+	•	Calvin: Summarised assessment brief and Sprint 1 requirements
+	•	Meason: Suggested focusing on minimising food waste
+	•	Alvan: Reviewed example project ideas from the brief
+	•	Yusuf: Considered technical feasibility of proposed ideas
+	•	Marcica: Reviewed ethical considerations for food sharing
