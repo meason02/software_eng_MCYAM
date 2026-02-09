@@ -48,3 +48,12 @@ Software Engineering MCMAY
 
 Meeting Goal:
 Set up GitHub project board and product backlog
+Facilitator:
+Alvan
+
+Note taker:
+Yusuf
+
+Attendees:
+Calvin, Meason, Alvan, Yusuf, Marcica
+
