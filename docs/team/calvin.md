@@ -38,7 +38,7 @@ Actions:
 	•	Everyone to make an initial commit – All members
 
 
-## Meeting Record 2
+## Meeting Record 2 
 
 Date and Time:
 30 January 2026, 15:30 – 16:30
