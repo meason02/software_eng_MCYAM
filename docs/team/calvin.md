@@ -84,3 +84,11 @@ Software Engineering MCMAY
 
 Meeting Goal:
 Set up and verify Docker development environment
+
+Yusuf
+
+Note taker:
+Calvin
+
+Attendees:
+Calvin, Meason, Alvan, Yusuf, Marcica
