@@ -17,53 +17,53 @@ The design focuses on being fast to use, easy to understand, and helpful for peo
 Create Food Listings
 Allows users to quickly upload information about surplus food, including:
 
-Item name
-Quantity
-Category
-Pickup window
-Optional notes (allergy information, preparation details)
+- Item name
+- Quantity
+- Category
+- Pickup window
+- Optional notes (allergy information, preparation details)
 
 This feature is ideal for both individuals and small businesses who want a fast, low‑effort listing process.
 
-Browse Available Food
+## Browse Available Food
 Visitors can easily search and filter available items:
 
-View nearby food
-Filter by category
-Check availability time
-See collection instructions
+- View nearby food
+- Filter by category
+- Check availability time
+- See collection instructions
 
 The browsing experience is designed for clarity and speed, helping users make decisions quickly and without confusion.
 
-Mark Food as Collected
+## Mark Food as Collected
 Once the food has been picked up:
 
-The lister can mark it as collected
-The item is removed from active listings
-This keeps the platform up‑to‑date and reliable
+- The lister can mark it as collected
+- The item is removed from active listings
+- This keeps the platform up‑to‑date and reliable
 
 
-Simple, Friendly Interface
+## Simple, Friendly Interface
 The platform uses:
 
-Clear wording
-Straightforward navigation
-Minimal steps
-Mobile‑friendly views
+- Clear wording
+- Straightforward navigation
+- Minimal steps
+- Mobile‑friendly views
 
 This ensures accessibility for users who may not be confident with complex digital systems.
 
-Support for Community Values
+## Support for Community Values
 The platform emphasises:
 
-Sharing without stigma
-Transparency and trust
-Safety in pickup arrangements
-Encouraging sustainable habits
+- Sharing without stigma
+- Transparency and trust
+- Safety in pickup arrangements
+- Encouraging sustainable habits
 
 This helps create a welcoming community environment.
 
-Tech Stack
+## Tech Stack
 
 Node.js + Express for server logic
 MySQL for storing listings and user data
