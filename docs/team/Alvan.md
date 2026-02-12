@@ -4,7 +4,7 @@ Alvan Chukwuani  A00024966
 There is a risk that shared food may be unsafe to consume if it has been stored, prepared, or
 handled incorrectly. To mitigate this risk, the application will clearly inform users that food is
 shared at their own risk and provide basic food safety and hygiene guidelines to reduce
-potential health issues.
+potential health issues. 
 # User Privacy, Transparency, and Trust
 The platform may involve sharing personal information such as names, approximate locations,
 or collection times, creating risks related to privacy and misuse of information. This will be
