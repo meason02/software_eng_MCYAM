@@ -1,5 +1,5 @@
 Alvan Chukwuani  A00024966 
-## Ethical Issues:
+## Ethical Issues: 
 # Food Safety and Hygiene
 There is a risk that shared food may be unsafe to consume if it has been stored, prepared, or
 handled incorrectly. To mitigate this risk, the application will clearly inform users that food is
