@@ -24,3 +24,6 @@ From a technical perspective, the application will be implemented as a full-stac
 be used to ensure a consistent development environment across the team, and GitHub Actions
 will support basic CI/CD workflows. These tools will enable the team to collaborate effectively
 while delivering a reliable and maintainable solution.
+
+Completed Meeting Records
+Completed Use case diagram
