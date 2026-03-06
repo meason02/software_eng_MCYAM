@@ -36,14 +36,14 @@ Actions:
 	•	Prepare Sprint 1 PDF submission – Calvin
 
 
-### Sequence Diagram – Claim Listing Process
+## Sequence Diagram – Claim Listing Process
 - Designed and updated the sequence diagram for the food listing claim workflow.
 - Added authentication validation using session/token verification.
 - Implemented atomic database operation `claimListingIfAvailable(userId, listingId)` to prevent concurrent claims.
 - Added result handling branches for "EXPIRED", "UNAVAILABLE", and "SUCCESS".
 - Integrated NotificationService interaction to notify the sharer after a successful claim.
 
-### Activity Diagram – Claim A Food Listing
+## Activity Diagram – Claim A Food Listing
 - Updated the activity workflow to align with the system domain model.
 - Added step to create a Claim record with ClaimStatus = "PENDING".
 - Updated listing status to ListingStatus = "PENDING_CONFIRMATION".
