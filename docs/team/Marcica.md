@@ -28,10 +28,26 @@ Roundtable Updates:
 Discussion Points:
 	•	Confirmed Docker runs on all group members’ machines
 	•	Discussed environment variable handling
-	•	Identified minor setup issues and fixes
-	
+	•	Identified minor setup issues and fixes	
 Actions:
 	•	Fix remaining Docker issues – Yusuf
 	•	Finalise README Docker section – Alvan
 	•	Verify all members can run containers – Meason
 	•	Prepare Sprint 1 PDF submission – Calvin
+
+
+## Individual Contributions
+
+### Sequence Diagram – Claim Listing Process
+- Designed and updated the sequence diagram for the food listing claim workflow.
+- Added authentication validation using session/token verification.
+- Implemented atomic database operation `claimListingIfAvailable(userId, listingId)` to prevent concurrent claims.
+- Added result handling branches for "EXPIRED", "UNAVAILABLE", and "SUCCESS".
+- Integrated NotificationService interaction to notify the sharer after a successful claim.
+
+### Activity Diagram – Claim A Food Listing
+- Updated the activity workflow to align with the system domain model.
+- Added step to create a Claim record with ClaimStatus = "PENDING".
+- Updated listing status to ListingStatus = "PENDING_CONFIRMATION".
+- Added notification step to inform the sharer via NotificationService.
+- Ensured consistency with the class diagram enums and system logic.
