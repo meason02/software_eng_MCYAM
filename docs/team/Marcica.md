@@ -36,8 +36,6 @@ Actions:
 	•	Prepare Sprint 1 PDF submission – Calvin
 
 
-## Individual Contributions
-
 ### Sequence Diagram – Claim Listing Process
 - Designed and updated the sequence diagram for the food listing claim workflow.
 - Added authentication validation using session/token verification.
