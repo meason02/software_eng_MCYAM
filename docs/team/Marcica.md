@@ -1,4 +1,4 @@
-Marcica
+Marcica Cercel
 
 ## Meeting Record 3
 
