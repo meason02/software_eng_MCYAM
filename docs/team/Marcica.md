@@ -35,7 +35,7 @@ Actions:
 	•	Verify all members can run containers – Meason
 	•	Prepare Sprint 1 PDF submission – Calvin
 
-
+# Fully designed both the sequence diagram "Claim Listing Process" and the activity diagram "Claim A Food Listing". Furthermore, took in account lecturer's feedback on our work and improved  the activity diagram, in order to fully align with our project.
 ## Sequence Diagram – Claim Listing Process
 - Designed and updated the sequence diagram for the food listing claim workflow.
 - Added authentication validation using session/token verification.
