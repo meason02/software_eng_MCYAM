@@ -38,7 +38,7 @@ Actions:
 -	Prepare Sprint 1 PDF submission – Calvin
 
 
-- Fully designed and implemented both the sequence diagram “Claim Listing Process” and the activity diagram “Claim a Food Listing.” Following the Sprint 2 demo, I incorporated the lecturer’s feedback and refined the activity diagram to better align with the project’s workflow, domain model, and system logic.
+###### Fully designed and implemented both the sequence diagram “Claim Listing Process” and the activity diagram “Claim a Food Listing.” Following the Sprint 2 demo, I incorporated the lecturer’s feedback and refined the activity diagram to better align with the project’s workflow, domain model, and system logic.
 
 ## Sequence Diagram – Claim Listing Process
 - Designed and updated the sequence diagram representing the food listing claim workflow.
