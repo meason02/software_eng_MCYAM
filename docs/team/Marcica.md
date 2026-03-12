@@ -20,20 +20,20 @@ Attendees:
 Calvin, Meason, Alvan, Yusuf, Marcica
 
 Roundtable Updates:
-	•	Calvin: Created initial Dockerfile for Node.js
-	•	Meason: Tested Docker setup locally
-	•	Alvan: Added Docker instructions to README
-	•	Yusuf: Configured docker-compose with MySQL
-	•	Marcica: Confirmed containers run successfully
+	-	Calvin: Created initial Dockerfile for Node.js
+	-	Meason: Tested Docker setup locally
+	-	Alvan: Added Docker instructions to README
+	-	Yusuf: Configured docker-compose with MySQL
+	-	Marcica: Confirmed containers run successfully
 Discussion Points:
-	•	Confirmed Docker runs on all group members’ machines
-	•	Discussed environment variable handling
-	•	Identified minor setup issues and fixes	
+	-	Confirmed Docker runs on all group members’ machines
+	-	Discussed environment variable handling
+	-	Identified minor setup issues and fixes	
 Actions:
-	•	Fix remaining Docker issues – Yusuf
-	•	Finalise README Docker section – Alvan
-	•	Verify all members can run containers – Meason
-	•	Prepare Sprint 1 PDF submission – Calvin
+	-	Fix remaining Docker issues – Yusuf
+	-	Finalise README Docker section – Alvan
+	-	Verify all members can run containers – Meason
+	-	Prepare Sprint 1 PDF submission – Calvin
 
 ##### Fully designed and implemented both the sequence diagram “Claim Listing Process” and the activity diagram “Claim a Food Listing.” Following the Sprint 2 demo, I incorporated the lecturer’s feedback and refined the activity diagram to better align with the project’s workflow, domain model, and system logic.
 ## Sequence Diagram – Claim Listing Process
