@@ -44,8 +44,8 @@ Actions:
 - Integrated NotificationService interaction to notify the sharer after a successful claim.
 
 ## Activity Diagram – Claim A Food Listing
-- Updated the activity workflow to align with the system domain model.
-- Added step to create a Claim record with ClaimStatus = "PENDING".
-- Updated listing status to ListingStatus = "PENDING_CONFIRMATION".
-- Added notification step to inform the sharer via NotificationService.
-- Ensured consistency with the class diagram enums and system logic.
+- Updated the activity workflow to better align with the system domain model and application behaviour.
+- Added a step to create a Claim record with ClaimStatus = PENDING, reflecting the Claim entity defined in the class diagram.
+- Updated the listing state to ListingStatus = PENDING_CONFIRMATION to match the enumeration defined in the domain model.
+- Added a notification step using NotificationService to inform the sharer when a new claim is submitted.
+- Ensured consistency with the class diagram enums, system validation logic, and sequence diagram interaction flow.
