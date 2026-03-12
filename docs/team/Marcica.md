@@ -20,11 +20,11 @@ Attendees:
 Calvin, Meason, Alvan, Yusuf, Marcica
 
 Roundtable Updates:
-	-	Calvin: Created initial Dockerfile for Node.js
-	-	Meason: Tested Docker setup locally
-	-	Alvan: Added Docker instructions to README
-	-	Yusuf: Configured docker-compose with MySQL
-	-	Marcica: Confirmed containers run successfully
+-	Calvin: Created initial Dockerfile for Node.js
+-	Meason: Tested Docker setup locally
+-	Alvan: Added Docker instructions to README
+-	Yusuf: Configured docker-compose with MySQL
+-	Marcica: Confirmed containers run successfully
 Discussion Points:
 	-	Confirmed Docker runs on all group members’ machines
 	-	Discussed environment variable handling
