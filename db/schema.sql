@@ -1,66 +1,94 @@
--- phpMyAdmin SQL Dump
--- version 5.1.1
--- https://www.phpmyadmin.net/
---
--- Host: db
--- Generation Time: Oct 30, 2022 at 09:54 AM
--- Server version: 8.0.24
--- PHP Version: 7.4.20
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Drop tables if they already exist (to avoid errors when re-running)
+DROP TABLE IF EXISTS RATING;
+DROP TABLE IF EXISTS REPORT;
+DROP TABLE IF EXISTS CLAIM;
+DROP TABLE IF EXISTS LISTING_TAG;
+DROP TABLE IF EXISTS TAGS;
+DROP TABLE IF EXISTS FOOD_LISTING;
+DROP TABLE IF EXISTS CATEGORY;
+DROP TABLE IF EXISTS USER;
 
+CREATE TABLE `USER` (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255),
+    email VARCHAR(255),
+    password_hash VARCHAR(255),
+    role VARCHAR(100),
+    created_at DATETIME
+);
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- CATEGORY TABLE
+CREATE TABLE CATEGORY (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255)
+);
 
---
--- Database: `sd2-db`
---
+-- FOOD_LISTING TABLE
+CREATE TABLE FOOD_LISTING (
+    listing_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    category_id INT,
+    title VARCHAR(255),
+    description VARCHAR(255),
+    quantity INT,
+    expiry_date DATE,
+    collection_start DATETIME,
+    collection_end DATETIME,
+    pickup_location VARCHAR(255),
+    status VARCHAR(100),
+    create_at DATETIME,
 
--- --------------------------------------------------------
+    FOREIGN KEY (user_id) REFERENCES USER(user_id),
+    FOREIGN KEY (category_id) REFERENCES CATEGORY(category_id)
+);
 
---
--- Table structure for table `test_table`
---
+-- TAGS TABLE
+CREATE TABLE TAGS (
+    tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(255)
+);
 
-CREATE TABLE `test_table` (
-  `id` int NOT NULL,
-  `name` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- LISTING_TAG TABLE (Junction Table)
+CREATE TABLE LISTING_TAG (
+    listing_id INT,
+    tag_id INT,
+    PRIMARY KEY (listing_id, tag_id),
 
---
--- Dumping data for table `test_table`
---
+    FOREIGN KEY (listing_id) REFERENCES FOOD_LISTING(listing_id),
+    FOREIGN KEY (tag_id) REFERENCES TAGS(tag_id)
+);
 
-INSERT INTO `test_table` (`id`, `name`) VALUES
-(1, 'Lisa'),
-(2, 'Kimia');
+-- CLAIM TABLE
+CREATE TABLE CLAIM (
+    claims_id INT AUTO_INCREMENT PRIMARY KEY,
+    listing_id INT,
+    user_id INT,
+    called_at DATETIME,
+    status VARCHAR(100),
 
---
--- Indexes for dumped tables
---
+    FOREIGN KEY (listing_id) REFERENCES FOOD_LISTING(listing_id),
+    FOREIGN KEY (user_id) REFERENCES USER(user_id)
+);
 
---
--- Indexes for table `test_table`
---
-ALTER TABLE `test_table`
-  ADD PRIMARY KEY (`id`);
+-- REPORT TABLE
+CREATE TABLE REPORT (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    listing_id INT,
+    reason VARCHAR(255),
+    created_at DATETIME,
+    status VARCHAR(100),
 
---
--- AUTO_INCREMENT for dumped tables
---
+    FOREIGN KEY (user_id) REFERENCES USER(user_id),
+    FOREIGN KEY (listing_id) REFERENCES FOOD_LISTING(listing_id)
+);
 
---
--- AUTO_INCREMENT for table `test_table`
---
-ALTER TABLE `test_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE RATING (
+    rating_id INT AUTO_INCREMENT PRIMARY KEY,
+    claim_id INT,
+    score INT,
+    feedback VARCHAR(255),
+    created_at DATETIME,
+    FOREIGN KEY (claim_id) REFERENCES CLAIM(claims_id)
+);
