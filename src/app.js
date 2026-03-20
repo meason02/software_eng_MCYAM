@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const db = require('./config/db');
+const usersRoutes = require('./routes/users');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,14 +13,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', async (req, res) => {
-  try {
-    const [rows] = await db.query('SELECT 1 AS ok');
-    res.send(`DB connected: ${rows[0].ok}`);
-  } catch (error) {
-    console.error('Database error:', error);
-    res.status(500).send('Database connection failed');
-  }
+app.get('/', (req, res) => {
+  res.redirect('/users');
+});
+
+app.use('/users', usersRoutes);
+
+app.get('/listings', (req, res) => {
+  res.send('Listings page coming soon');
+});
+
+app.get('/categories', (req, res) => {
+  res.send('Categories page coming soon');
 });
 
 app.listen(PORT, () => {

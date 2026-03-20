@@ -1,14 +1,21 @@
 extends ../layout
 
 block content
-  h2 Page connected successfully
-  p Total users in database: #{totalUsers}
+  h2 Users List
 
   if users.length
     each user in users
       .card
         h3= user.username
-        p= user.email
+        p
+          strong Email:
+          |  #{user.email}
+        p
+          strong User ID:
+          |  #{user.user_id}
+        p
+          strong Joined:
+          |  #{user.created_at}
   else
     .card
-      p Users page skeleton is ready.
+      p No users found.
