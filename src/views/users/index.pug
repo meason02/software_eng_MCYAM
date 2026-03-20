@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  h2 Page connected successfully
+  p Total users in database: #{totalUsers}
+
+  if users.length
+    each user in users
+      .card
+        h3= user.username
+        p= user.email
+  else
+    .card
+      p Users page skeleton is ready.
