@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+  h1 Categories
+
+  if categories && categories.length
+    .card
+      h2 Select a category
+      ul
+        each category in categories
+          li
+            a(href=`/categories/${category.category_id}`)= category.name
+  else
+    p No categories found.
+
+  if selectedCategory
+    h2 Listings in #{selectedCategory.name}
+
+    if listings && listings.length
+      each listing in listings
+        .card
+          h3
+            a(href=`/listings/${listing.listing_id}`)= listing.title
+          p
+            strong Quantity:
+            |  #{listing.quantity}
+          p
+            strong Expiry Date:
+            |  #{new Date(listing.expiry_date).toDateString()}
+          p
+            strong Pickup Location:
+            |  #{listing.pickup_location}
+          p
+            strong Status:
+            |  #{listing.status}
+          if listing.tags
+            p
+              strong Tags:
+              |  #{listing.tags}
+    else
+      p No listings found for this category.
