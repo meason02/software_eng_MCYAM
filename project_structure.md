@@ -4,7 +4,7 @@ A Dockerised web application built with **Node.js**, **Express**, **PUG**, and *
 
 ## Current Sprint 3 Progress
 
-The following Sprint 3 setup is currently working:
+The following Sprint 3 setup is currently working: 
 
 - Docker environment setup
 - MySQL database connected to the app
