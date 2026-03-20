@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  h2 User Profile
+
+  .card
+    h3= user.username
+    p
+      strong User ID:
+      |  #{user.user_id}
+    p
+      strong Email:
+      |  #{user.email}
+    p
+      strong Joined:
+      |  #{user.created_at}
+
+  h2 User Listings
+
+  if listings.length
+    each listing in listings
+      .card
+        h3= listing.title
+        p
+          strong Listing ID:
+          |  #{listing.listing_id}
+        p
+          strong Status:
+          |  #{listing.status}
+        p
+          strong Created:
+          |  #{listing.created_at}
+  else
+    .card
+      p This user has no listings.

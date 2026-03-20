@@ -6,7 +6,8 @@ block content
   if users.length
     each user in users
       .card
-        h3= user.username
+        h3
+          a(href=`/users/${user.user_id}`)= user.username
         p
           strong Email:
           |  #{user.email}
