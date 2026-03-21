@@ -18,7 +18,7 @@ mechanisms, and potential limits on how frequently users can claim food.
 A small number of users could dominate available food listings, preventing others from
 benefiting equally. To promote fairness, the system can include measures such as claim limits,
 prioritisation of users who have not recently collected food, or visibility controls to ensure wider
-access. 
+access.
 # Encouraging Responsible Food Practices
 There is an ethical risk that the platform could unintentionally encourage food overproduction
 or unsafe food handling by normalising excess food creation. This will be addressed by clearly
