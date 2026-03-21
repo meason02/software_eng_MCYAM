@@ -1,0 +1,43 @@
+extends ../layout
+
+block content
+  h1= listing.title
+
+  .card
+    p
+      strong Description:
+      |  #{listing.description}
+    p
+      strong Quantity:
+      |  #{listing.quantity}
+    p
+      strong Expiry Date:
+      |  #{new Date(listing.expiry_date).toDateString()}
+    p
+      strong Collection Start:
+      |  #{new Date(listing.collection_start).toLocaleString()}
+    p
+      strong Collection End:
+      |  #{new Date(listing.collection_end).toLocaleString()}
+    p
+      strong Pickup Location:
+      |  #{listing.pickup_location}
+    p
+      strong Status:
+      |  #{listing.status}
+    p
+      strong Category:
+      |  #{listing.category_name}
+    p
+      strong Owner:
+      |  #{listing.owner_username}
+    p
+      strong Owner Email:
+      |  #{listing.owner_email}
+    if listing.tags
+      p
+        strong Tags:
+        |  #{listing.tags}
+
+  p
+    a(href='/listings') Back to Listings
