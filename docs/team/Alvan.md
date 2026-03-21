@@ -10,7 +10,7 @@ The platform may involve sharing personal information such as names, approximate
 or collection times, creating risks related to privacy and misuse of information. This will be
 mitigated by limiting the amount of personal data displayed, only sharing necessary details, and
 requiring clear and honest food listings to promote trust and transparency between users.
-# Misuse of the Platform for Non-Community Purposes
+# Misuse of the Platform for Non-Community Purposes 
 There is a risk that users may exploit the platform by repeatedly claiming food without genuine
 need or reselling items for profit, which conflicts with the platform’s cooperative and noncommercial purpose. This risk can be reduced through community guidelines, reporting
 mechanisms, and potential limits on how frequently users can claim food.
