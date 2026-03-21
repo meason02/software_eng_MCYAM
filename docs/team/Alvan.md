@@ -28,4 +28,4 @@ planning or safe food preparation practices.
 Without accountability, harmful behaviour such as misleading listings, harassment, or disputes
 during food collection could occur. This can be mitigated by introducing reporting tools, clear
 community rules, and moderation processes to resolve conflicts and maintain a safe and
-respectful environment. 
+respectful environment.
