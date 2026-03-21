@@ -13,7 +13,7 @@ requiring clear and honest food listings to promote trust and transparency betwe
 # Misuse of the Platform for Non-Community Purposes
 There is a risk that users may exploit the platform by repeatedly claiming food without genuine
 need or reselling items for profit, which conflicts with the platform’s cooperative and noncommercial purpose. This risk can be reduced through community guidelines, reporting
-mechanisms, and potential limits on how frequently users can claim food.
+mechanisms, and potential limits on how frequently users can claim food. 
 # Fairness and Equal Access to Shared Food
 A small number of users could dominate available food listings, preventing others from
 benefiting equally. To promote fairness, the system can include measures such as claim limits,
