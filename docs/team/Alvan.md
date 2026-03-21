@@ -23,7 +23,7 @@ access.
 There is an ethical risk that the platform could unintentionally encourage food overproduction
 or unsafe food handling by normalising excess food creation. This will be addressed by clearly
 communicating that the application exists to reduce waste rather than replace responsible food
-planning or safe food preparation practices.
+planning or safe food preparation practices. 
 # Accountability and Community Moderation
 Without accountability, harmful behaviour such as misleading listings, harassment, or disputes
 during food collection could occur. This can be mitigated by introducing reporting tools, clear
