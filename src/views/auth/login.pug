@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  h1 Login
+
+  form(method='POST', action='/login')
+    .card
+      p
+        label(for='email') Email
+        br
+        input#email(type='email', name='email', required)
+
+      p
+        label(for='password') Password
+        br
+        input#password(type='password', name='password', required)
+
+      p
+        button(type='submit') Login
+
+  p
+    a(href='/register') Need an account? Register
