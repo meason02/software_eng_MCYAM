@@ -3,17 +3,24 @@ extends ../layout
 block content
   h1 Register
 
+  if errors && errors.length
+    .card
+      h3 Validation Errors
+      ul
+        each error in errors
+          li= error
+
   form(method='POST', action='/register')
     .card
       p
         label(for='username') Username
         br
-        input#username(type='text', name='username', required)
+        input#username(type='text', name='username', required, value=formData && formData.username ? formData.username : '')
 
       p
         label(for='email') Email
         br
-        input#email(type='email', name='email', required)
+        input#email(type='email', name='email', required, value=formData && formData.email ? formData.email : '')
 
       p
         label(for='password') Password

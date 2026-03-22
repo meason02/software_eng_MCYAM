@@ -17,9 +17,13 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getUserById = async (req, res) => {
-  try {
-    const userId = req.params.id;
+  const userId = Number(req.params.id);
 
+  if (!Number.isInteger(userId) || userId <= 0) {
+    return res.status(400).send('Invalid user ID');
+  }
+
+  try {
     const [users] = await db.query(
       'SELECT user_id, username, email, created_at FROM `USER` WHERE user_id = ?',
       [userId]

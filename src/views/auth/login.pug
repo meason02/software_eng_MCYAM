@@ -3,12 +3,19 @@ extends ../layout
 block content
   h1 Login
 
+  if errors && errors.length
+    .card
+      h3 Login Error
+      ul
+        each error in errors
+          li= error
+
   form(method='POST', action='/login')
     .card
       p
         label(for='email') Email
         br
-        input#email(type='email', name='email', required)
+        input#email(type='email', name='email', required, value=formData && formData.email ? formData.email : '')
 
       p
         label(for='password') Password

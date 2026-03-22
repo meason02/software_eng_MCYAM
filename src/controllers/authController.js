@@ -1,17 +1,54 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
-exports.showRegister = (req, res) => {
-  res.render('auth/register', {
-    title: 'Register'
+const renderRegister = (res, formData = {}, errors = [], statusCode = 200) => {
+  return res.status(statusCode).render('auth/register', {
+    title: 'Register',
+    errors,
+    formData
   });
 };
 
-exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
+const renderLogin = (res, formData = {}, errors = [], statusCode = 200) => {
+  return res.status(statusCode).render('auth/login', {
+    title: 'Login',
+    errors,
+    formData
+  });
+};
 
-  if (!username || !email || !password) {
-    return res.status(400).send('All fields are required');
+exports.showRegister = (req, res) => {
+  return renderRegister(res, {}, []);
+};
+
+exports.register = async (req, res) => {
+  const username = (req.body.username || '').trim();
+  const email = (req.body.email || '').trim();
+  const password = req.body.password || '';
+
+  const errors = [];
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!username) {
+    errors.push('Username is required');
+  } else if (username.length < 3 || username.length > 50) {
+    errors.push('Username must be between 3 and 50 characters');
+  }
+
+  if (!email) {
+    errors.push('Email is required');
+  } else if (!emailPattern.test(email)) {
+    errors.push('Enter a valid email address');
+  }
+
+  if (!password) {
+    errors.push('Password is required');
+  } else if (password.length < 6) {
+    errors.push('Password must be at least 6 characters');
+  }
+
+  if (errors.length > 0) {
+    return renderRegister(res, { username, email }, errors, 400);
   }
 
   try {
@@ -21,7 +58,12 @@ exports.register = async (req, res) => {
     );
 
     if (existingUsers.length > 0) {
-      return res.status(400).send('Username or email already exists');
+      return renderRegister(
+        res,
+        { username, email },
+        ['Username or email already exists'],
+        400
+      );
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -31,24 +73,41 @@ exports.register = async (req, res) => {
       [username, email, passwordHash, 'user']
     );
 
-    res.redirect('/login');
+    return res.redirect('/login');
   } catch (error) {
     console.error('Register error:', error);
-    res.status(500).send('Server error');
+    return renderRegister(
+      res,
+      { username, email },
+      ['Server error. Please try again.'],
+      500
+    );
   }
 };
 
 exports.showLogin = (req, res) => {
-  res.render('auth/login', {
-    title: 'Login'
-  });
+  return renderLogin(res, {}, []);
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  const email = (req.body.email || '').trim();
+  const password = req.body.password || '';
 
-  if (!email || !password) {
-    return res.status(400).send('Email and password are required');
+  const errors = [];
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email) {
+    errors.push('Email is required');
+  } else if (!emailPattern.test(email)) {
+    errors.push('Enter a valid email address');
+  }
+
+  if (!password) {
+    errors.push('Password is required');
+  }
+
+  if (errors.length > 0) {
+    return renderLogin(res, { email }, errors, 400);
   }
 
   try {
@@ -58,14 +117,24 @@ exports.login = async (req, res) => {
     );
 
     if (rows.length === 0) {
-      return res.status(401).send('Invalid email or password');
+      return renderLogin(
+        res,
+        { email },
+        ['Invalid email or password'],
+        401
+      );
     }
 
     const user = rows[0];
     const passwordMatches = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatches) {
-      return res.status(401).send('Invalid email or password');
+      return renderLogin(
+        res,
+        { email },
+        ['Invalid email or password'],
+        401
+      );
     }
 
     req.session.user = {
@@ -75,10 +144,15 @@ exports.login = async (req, res) => {
       role: user.role
     };
 
-    res.redirect('/users');
+    return res.redirect('/users');
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).send('Server error');
+    return renderLogin(
+      res,
+      { email },
+      ['Server error. Please try again.'],
+      500
+    );
   }
 };
 
@@ -89,6 +163,6 @@ exports.logout = (req, res) => {
       return res.status(500).send('Server error');
     }
 
-    res.redirect('/login');
+    return res.redirect('/login');
   });
 };
