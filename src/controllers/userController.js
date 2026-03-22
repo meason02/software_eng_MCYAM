@@ -30,7 +30,7 @@ exports.getUserById = async (req, res) => {
     }
 
     const [listings] = await db.query(
-      'SELECT listing_id, title, status, created_at FROM `FOOD_LISTING` WHERE user_id = ? ORDER BY listing_id ASC',
+      'SELECT listing_id, title, status, create_at AS created_at FROM `FOOD_LISTING` WHERE user_id = ? ORDER BY listing_id ASC',
       [userId]
     );
 
