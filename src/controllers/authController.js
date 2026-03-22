@@ -8,9 +8,9 @@ exports.showRegister = (req, res) => {
 };
 
 exports.register = async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!username || !email || !password || !role) {
+  if (!username || !email || !password) {
     return res.status(400).send('All fields are required');
   }
 
@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
 
     await db.query(
       'INSERT INTO USER (username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, NOW())',
-      [username, email, passwordHash, role]
+      [username, email, passwordHash, 'user']
     );
 
     res.redirect('/login');
