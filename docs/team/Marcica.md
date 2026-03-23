@@ -1,6 +1,6 @@
 Marcica Cercel A00037209
 
-## Meeting Record 3
+## Sprint 1 Task: Meeting Record 3
 
 Date and Time:
 3 February 2026, 11:00 – 12:00
