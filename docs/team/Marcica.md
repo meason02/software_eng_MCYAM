@@ -47,7 +47,7 @@ Actions:
 - Introduced conditional result branches for “EXPIRED,” “UNAVAILABLE,” and “SUCCESS” outcomes to handle different system responses.
 - Integrated the NotificationService interaction to notify the sharer after a successful claim.
 
-## Activity Diagram – Claim A Food Listing
+## Sprint 2 Task 2: Activity Diagram – Claim A Food Listing
 - Updated the activity workflow to better align with the system domain model and application behaviour.
 - Added a step to create a Claim record with ClaimStatus = PENDING, reflecting the Claim entity defined in the class diagram.
 - Updated the listing state to ListingStatus = PENDING_CONFIRMATION to match the enumeration defined in the domain model.
