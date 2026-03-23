@@ -1,0 +1,65 @@
+extends ../layout
+
+block content
+  h1 Create Listing
+
+  if errors && errors.length
+    .card
+      h3 Validation Errors
+      ul
+        each error in errors
+          li= error
+
+  form(method='POST', action='/listings/create')
+    .card
+      p
+        label(for='category_id') Category
+        br
+        select#category_id(name='category_id', required)
+          option(value='') Select a category
+          each category in categories
+            option(
+              value=category.category_id,
+              selected=formData && formData.category_id == String(category.category_id) ? true : false
+            )= category.name
+
+      p
+        label(for='title') Title
+        br
+        input#title(type='text', name='title', required, value=formData && formData.title ? formData.title : '')
+
+      p
+        label(for='description') Description
+        br
+        input#description(type='text', name='description', required, value=formData && formData.description ? formData.description : '')
+
+      p
+        label(for='quantity') Quantity
+        br
+        input#quantity(type='number', name='quantity', min='1', required, value=formData && formData.quantity ? formData.quantity : '')
+
+      p
+        label(for='expiry_date') Expiry Date
+        br
+        input#expiry_date(type='date', name='expiry_date', required, value=formData && formData.expiry_date ? formData.expiry_date : '')
+
+      p
+        label(for='collection_start') Collection Start
+        br
+        input#collection_start(type='datetime-local', name='collection_start', required, value=formData && formData.collection_start ? formData.collection_start : '')
+
+      p
+        label(for='collection_end') Collection End
+        br
+        input#collection_end(type='datetime-local', name='collection_end', required, value=formData && formData.collection_end ? formData.collection_end : '')
+
+      p
+        label(for='pickup_location') Pickup Location
+        br
+        input#pickup_location(type='text', name='pickup_location', required, value=formData && formData.pickup_location ? formData.pickup_location : '')
+
+      p
+        button(type='submit') Create Listing
+
+  p
+    a(href='/listings') Back to Listings

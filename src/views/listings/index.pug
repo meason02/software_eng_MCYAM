@@ -3,11 +3,58 @@ extends ../layout
 block content
   h1 Listings
 
+  p
+    a(href='/listings/create') Create New Listing
+
+  if errors && errors.length
+    .card
+      h3 Filter Errors
+      ul
+        each error in errors
+          li= error
+
+  form(method='GET', action='/listings')
+    .card
+      p
+        label(for='q') Search
+        br
+        input#q(type='text', name='q', value=filters && filters.q ? filters.q : '', placeholder='Search title, description, or location')
+
+      p
+        label(for='category_id') Category
+        br
+        select#category_id(name='category_id')
+          option(value='') All categories
+          each category in categories
+            option(
+              value=category.category_id,
+              selected=filters && filters.category_id == String(category.category_id) ? true : false
+            )= category.name
+
+      p
+        label(for='status') Status
+        br
+        select#status(name='status')
+          option(value='') All statuses
+          each optionValue in statusOptions
+            option(
+              value=optionValue,
+              selected=filters && filters.status == optionValue ? true : false
+            )= optionValue
+
+      p
+        button(type='submit') Apply Filters
+        | 
+        a(href='/listings') Clear
+
   if listings && listings.length
     each listing in listings
       .card
         h3
           a(href=`/listings/${listing.listing_id}`)= listing.title
+        p
+          strong Category:
+          |  #{listing.category_name}
         p
           strong Quantity:
           |  #{listing.quantity}
