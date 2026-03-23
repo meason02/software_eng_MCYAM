@@ -58,19 +58,9 @@ Actions:
 ###### Implemented the Sprint 3 claim workflow for surplus food listings, covering both claim creation and the full claim status lifecycle. This included creating the backend logic, updating the listing detail page, validating business rules, synchronizing database updates, and testing the complete process with the shared team environment. 
 
 ## Sprint 3 Tasks Implementation: Claim Flow and Claim Status Actions 
-- Implemented claim submission on the listing detail page using the **“Submit Claim Request”** action. 
-- Added validation to ensure users are logged in, cannot claim their own listing, and can only claim available listings without existing active claims. 
-- Created claim records with **ClaimStatus = PENDING** and updated listings to **CLAIM_PENDING**. 
-- Implemented claim actions for owners: **Confirm**, **Reject**, and **Complete**. 
-- Enforced valid transitions: **PENDING → CONFIRMED**, **PENDING → REJECTED**, **CONFIRMED → COMPLETED**. 
-- Updated both `CLAIM` and `FOOD_LISTING` statuses accordingly. 
-- Added dynamic UI logic to display actions based on user role and claim state. 
-- Implemented feedback messages for success and error cases. 
-- Tested the full workflow to ensure correct behavior across all states. 
-- Used `docker compose restart web` to apply and test changes. 
-- Synced work using Git: `git status`, `git add`, `git commit`, `git push`. 
-- Collaborated using **Tailscale** for a shared development environment.completed successfully**. 
-- Verified the implementation using the working web pages and database state, confirming that claim creation, rejection, confirmation, and completion all worked correctly in practice. 
-- Used Docker commands such as `docker compose restart web` to reload the application during development and testing. 
-- Synced my work with the shared GitHub repository using `git status`, `git add`, `git commit -m "Add claim flow and claim action handling"`, and `git push origin main`. 
-- Worked in the shared team environment using **Tailscale**, which allowed us to connect to the same project setup and keep our systems aligned while integrating Sprint 3 functionality.
+- Added **“Submit Claim Request”** button on the listing detail page.
+- Created backend route and controller to handle claim creation.
+- Validated that users are logged in and cannot claim their own listing.
+- Prevented claims on unavailable listings or listings with active claims.
+- Inserted new claim with **status = PENDING**.
+- Updated listing status to **CLAIM_PENDING** after claim submission.
