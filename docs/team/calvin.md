@@ -16,7 +16,7 @@ Calvin
 
 Note taker:
 Alvan
-
+ 
 Attendees:
 Calvin, Meason, Alvan, Yusuf, Marcica
 
