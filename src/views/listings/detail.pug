@@ -3,6 +3,14 @@ extends ../layout
 block content
   h1= listing.title
 
+  if claimFeedback
+    .card
+      if claimFeedback.type === 'success'
+        h3 Claim Update
+      else
+        h3 Claim Error
+      p= claimFeedback.message
+
   .card
     p
       strong Description:
@@ -38,6 +46,52 @@ block content
       p
         strong Tags:
         |  #{listing.tags}
+
+  .card
+    h3 Claim This Listing
+
+    if claimState && claimState.canClaim
+      form(method='POST', action=`/listings/${listing.listing_id}/claim`)
+        button(type='submit') Submit Claim Request
+    else if claimState && claimState.isOwner && claimState.activeClaim
+      p
+        strong Claimant:
+        |  #{claimState.activeClaim.claimant_username}
+      p
+        strong Claimant Email:
+        |  #{claimState.activeClaim.claimant_email}
+      p
+        strong Current Claim Status:
+        |  #{claimState.activeClaim.status}
+      p
+        strong Claimed At:
+        |  #{new Date(claimState.activeClaim.called_at).toLocaleString()}
+
+      if claimState.canConfirm
+        form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
+          input(type='hidden', name='action', value='confirm')
+          button(type='submit') Confirm Claim
+
+      if claimState.canReject
+        form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
+          input(type='hidden', name='action', value='reject')
+          button(type='submit') Reject Claim
+
+      if claimState.canComplete
+        form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
+          input(type='hidden', name='action', value='complete')
+          button(type='submit') Complete Claim
+    else if claimState && claimState.isOwner
+      p No live claim exists for this listing.
+    else if claimState && claimState.activeClaim
+      p
+        strong Current Claim Status:
+        |  #{claimState.activeClaim.status}
+      p
+        strong Claimed At:
+        |  #{new Date(claimState.activeClaim.called_at).toLocaleString()}
+    else
+      p This listing is not currently available for claiming.
 
   p
     a(href='/listings') Back to Listings
