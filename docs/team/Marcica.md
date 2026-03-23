@@ -58,3 +58,18 @@ Actions:
 ###### Implemented the Sprint 3 claim workflow for surplus food listings, covering both claim creation and the full claim status lifecycle. This included creating the backend logic, updating the listing detail page, validating business rules, synchronizing database updates, and testing the complete process with the shared team environment. 
 
 ## Sprint 3 Implementation – Claim Flow and Claim Status Actions 
+- Implemented the full **claim submission workflow** on the listing detail page by adding the **“Submit Claim Request”** action for available food listings. 
+- Created backend claim handling logic to validate that the current user is logged in, prevent users from claiming their own listing, block claims on unavailable listings, and prevent duplicate live claims. 
+- Inserted new claim records into the `CLAIM` table with status set to **`PENDING`** and updated the related `FOOD_LISTING` record to **`CLAIM_PENDING`** after a successful claim request. 
+- Implemented the **confirm**, **reject**, and **complete** claim actions for listing owners, including database updates for both claim and listing statuses. 
+- Enforced valid claim state transitions only, ensuring that claims move correctly from **`PENDING` → `CONFIRMED`**, **`PENDING` → `REJECTED`**, and **`CONFIRMED` → `COMPLETED`**. 
+- Updated the listing detail page interface so that it dynamically shows the correct controls and information depending on the current claim state, including: 
+  - claim submission for receivers, 
+  - claimant details for listing owners, 
+  - confirm/reject buttons for pending claims, 
+  - and complete action for confirmed claims. 
+- Added success and error feedback messages on the listing detail page, including states such as **claim submitted successfully**, **claim rejected successfully**, **claim confirmed successfully**, and **claim completed successfully**. 
+- Verified the implementation using the working web pages and database state, confirming that claim creation, rejection, confirmation, and completion all worked correctly in practice. 
+- Used Docker commands such as `docker compose restart web` to reload the application during development and testing. 
+- Synced my work with the shared GitHub repository using `git status`, `git add`, `git commit -m "Add claim flow and claim action handling"`, and `git push origin main`. 
+- Worked in the shared team environment using **Tailscale**, which allowed us to connect to the same project setup and keep our systems aligned while integrating Sprint 3 functionality.
