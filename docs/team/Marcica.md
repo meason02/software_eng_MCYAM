@@ -57,7 +57,7 @@ Actions:
 
 ###### Implemented the Sprint 3 claim workflow for surplus food listings, covering both claim creation and the full claim status lifecycle. This included creating the backend logic, updating the listing detail page, validating business rules, synchronizing database updates, and testing the complete process with the shared team environment. 
 
-## Sprint 3 Implementation – Claim Flow and Claim Status Actions 
+## Sprint 3 Tasks Implementation: Claim Flow and Claim Status Actions 
 - Implemented the full **claim submission workflow** on the listing detail page by adding the **“Submit Claim Request”** action for available food listings. 
 - Created backend claim handling logic to validate that the current user is logged in, prevent users from claiming their own listing, block claims on unavailable listings, and prevent duplicate live claims. 
 - Inserted new claim records into the `CLAIM` table with status set to **`PENDING`** and updated the related `FOOD_LISTING` record to **`CLAIM_PENDING`** after a successful claim request. 
