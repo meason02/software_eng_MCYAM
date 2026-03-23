@@ -64,3 +64,24 @@ Actions:
 - Prevented claims on unavailable listings or listings with active claims.
 - Inserted new claim with **status = PENDING**.
 - Updated listing status to **CLAIM_PENDING** after claim submission.
+- Added **“Submit Claim Request”** button on the listing detail page.
+- Created backend route and controller to handle claim creation.
+- Validated that users are logged in and cannot claim their own listing.
+- Prevented claims on unavailable listings or listings with active claims.
+- Inserted new claim with **status = PENDING**.
+- Updated listing status to **CLAIM_PENDING** after claim submission.
+
+- Implemented claim actions: **Confirm**, **Reject**, **Complete**.
+- Restricted actions to the listing owner only.
+- Enforced valid transitions:
+  - **PENDING → CONFIRMED**
+  - **PENDING → REJECTED**
+  - **CONFIRMED → COMPLETED**
+- Updated both `CLAIM` and `FOOD_LISTING` tables accordingly.
+- Added UI buttons for owner actions (confirm/reject/complete).
+- Displayed current claim details and status on the page.
+- Added success/error feedback messages for each action.
+
+- Tested the full flow: claim → confirm/reject → complete.
+- Synced changes using Git (`git add`, `git commit`, `git push`).
+- Restarted the app with `docker compose restart web` to verify updates.
