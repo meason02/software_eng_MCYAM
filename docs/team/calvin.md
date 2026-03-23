@@ -9,7 +9,7 @@ Project Name:
 Software Engineering MCMAY
 
 Meeting Goal:
-Agree project idea, group name, and code of conduct
+Agree project idea, group name, and code of conduct  
 
 Facilitator:
 Calvin
