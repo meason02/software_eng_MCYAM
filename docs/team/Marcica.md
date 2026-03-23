@@ -53,3 +53,8 @@ Actions:
 - Updated the listing state to ListingStatus = PENDING_CONFIRMATION to match the enumeration defined in the domain model.
 - Added a notification step using NotificationService to inform the sharer when a new claim is submitted.
 - Ensured consistency with the class diagram enums, system validation logic, and sequence diagram interaction flow.
+
+
+###### Implemented the Sprint 3 claim workflow for surplus food listings, covering both claim creation and the full claim status lifecycle. This included creating the backend logic, updating the listing detail page, validating business rules, synchronizing database updates, and testing the complete process with the shared team environment. 
+
+## Sprint 3 Implementation – Claim Flow and Claim Status Actions 
