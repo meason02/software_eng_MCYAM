@@ -58,17 +58,18 @@ Actions:
 ###### Implemented the Sprint 3 claim workflow for surplus food listings, covering both claim creation and the full claim status lifecycle. This included creating the backend logic, updating the listing detail page, validating business rules, synchronizing database updates, and testing the complete process with the shared team environment. 
 
 ## Sprint 3 Tasks Implementation: Claim Flow and Claim Status Actions 
-- Implemented the full **claim submission workflow** on the listing detail page by adding the **“Submit Claim Request”** action for available food listings. 
-- Created backend claim handling logic to validate that the current user is logged in, prevent users from claiming their own listing, block claims on unavailable listings, and prevent duplicate live claims. 
-- Inserted new claim records into the `CLAIM` table with status set to **`PENDING`** and updated the related `FOOD_LISTING` record to **`CLAIM_PENDING`** after a successful claim request. 
-- Implemented the **confirm**, **reject**, and **complete** claim actions for listing owners, including database updates for both claim and listing statuses. 
-- Enforced valid claim state transitions only, ensuring that claims move correctly from **`PENDING` → `CONFIRMED`**, **`PENDING` → `REJECTED`**, and **`CONFIRMED` → `COMPLETED`**. 
-- Updated the listing detail page interface so that it dynamically shows the correct controls and information depending on the current claim state, including: 
-  - claim submission for receivers, 
-  - claimant details for listing owners, 
-  - confirm/reject buttons for pending claims, 
-  - and complete action for confirmed claims. 
-- Added success and error feedback messages on the listing detail page, including states such as **claim submitted successfully**, **claim rejected successfully**, **claim confirmed successfully**, and **claim completed successfully**. 
+- Implemented claim submission on the listing detail page using the **“Submit Claim Request”** action. 
+- Added validation to ensure users are logged in, cannot claim their own listing, and can only claim available listings without existing active claims. 
+- Created claim records with **ClaimStatus = PENDING** and updated listings to **CLAIM_PENDING**. 
+- Implemented claim actions for owners: **Confirm**, **Reject**, and **Complete**. 
+- Enforced valid transitions: **PENDING → CONFIRMED**, **PENDING → REJECTED**, **CONFIRMED → COMPLETED**. 
+- Updated both `CLAIM` and `FOOD_LISTING` statuses accordingly. 
+- Added dynamic UI logic to display actions based on user role and claim state. 
+- Implemented feedback messages for success and error cases. 
+- Tested the full workflow to ensure correct behavior across all states. 
+- Used `docker compose restart web` to apply and test changes. 
+- Synced work using Git: `git status`, `git add`, `git commit`, `git push`. 
+- Collaborated using **Tailscale** for a shared development environment.completed successfully**. 
 - Verified the implementation using the working web pages and database state, confirming that claim creation, rejection, confirmation, and completion all worked correctly in practice. 
 - Used Docker commands such as `docker compose restart web` to reload the application during development and testing. 
 - Synced my work with the shared GitHub repository using `git status`, `git add`, `git commit -m "Add claim flow and claim action handling"`, and `git push origin main`. 
