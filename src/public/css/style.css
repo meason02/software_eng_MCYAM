@@ -3606,3 +3606,61 @@ main.container {
   font-weight: 900;
   text-decoration: none;
 }
+
+/* Approved pickup point selector */
+.pickup-method-field {
+  background: #F7F8FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.pickup-method-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pickup-method-option {
+  background: #FFFFFF;
+  border: 1px solid #D9DEE7;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin: 0 !important;
+}
+
+.pickup-method-option input {
+  width: auto !important;
+  height: auto !important;
+}
+
+.pickup-method-option span {
+  color: #111827;
+  font-weight: 900;
+}
+
+.approved-pickup-panel,
+.manual-pickup-panel {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.pickup-help {
+  margin: 12px 0 0;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .pickup-method-options {
+    grid-template-columns: 1fr;
+  }
+}

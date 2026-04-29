@@ -95,15 +95,38 @@ block content
               value=form.collection_end ? form.collection_end : ''
             )
 
-        .create-field
-          label(for='pickup_location') Location
-          input#pickup_location(
-            type='text',
-            name='pickup_location',
-            required,
-            value=form.pickup_location ? form.pickup_location : '',
-            placeholder='Enter a location e.g. suburb, street address'
-          )
+        .create-field.pickup-method-field
+          label Pickup Location
+          input#pickup_location(type='hidden', name='pickup_location', value=form.pickup_location ? form.pickup_location : '')
+
+          .pickup-method-options
+            label.pickup-method-option(for='pickupMethodApproved')
+              input#pickupMethodApproved(type='radio', name='pickup_method', value='approved')
+              span Use approved pickup point
+
+            label.pickup-method-option(for='pickupMethodManual')
+              input#pickupMethodManual(type='radio', name='pickup_method', value='manual')
+              span Enter my own address
+
+          .approved-pickup-panel#approvedPickupPanel
+            label(for='approvedPickupSelect') Approved pickup point
+            select#approvedPickupSelect
+              option(value='') Select approved pickup point
+              option(value='University of Roehampton Main Campus, Grove House, Roehampton Lane, London, SW15 5PJ', selected=form.pickup_location === 'University of Roehampton Main Campus, Grove House, Roehampton Lane, London, SW15 5PJ' ? true : false) University of Roehampton Main Campus — Grove House, Roehampton Lane, London, SW15 5PJ
+              option(value='Putney Library, 5/7 Disraeli Road, London, SW15 2DR', selected=form.pickup_location === 'Putney Library, 5/7 Disraeli Road, London, SW15 2DR' ? true : false) Putney Library — 5/7 Disraeli Road, London, SW15 2DR
+              option(value='Barnes Station, Station Road, Barnes, Greater London, SW13 0HT', selected=form.pickup_location === 'Barnes Station, Station Road, Barnes, Greater London, SW13 0HT' ? true : false) Barnes Station — Station Road, Barnes, Greater London, SW13 0HT
+              option(value='Southfields Library, 300 Wimbledon Park Road, London, SW19 6NL', selected=form.pickup_location === 'Southfields Library, 300 Wimbledon Park Road, London, SW19 6NL' ? true : false) Southfields Library — 300 Wimbledon Park Road, London, SW19 6NL
+              option(value='Wandsworth Town Hall, Wandsworth High Street, London, SW18 2PU', selected=form.pickup_location === 'Wandsworth Town Hall, Wandsworth High Street, London, SW18 2PU' ? true : false) Wandsworth Town Hall — Wandsworth High Street, London, SW18 2PU
+
+          .manual-pickup-panel#manualPickupPanel
+            label(for='manualPickupAddress') Manual pickup address
+            input#manualPickupAddress(
+              type='text',
+              value=form.pickup_location ? form.pickup_location : '',
+              placeholder='Enter full address and postcode'
+            )
+
+          p.pickup-help Approved pickup points are recommended. Manual addresses should include a full postcode.
 
         .create-field
           label(for='description') Additional Details
@@ -148,4 +171,95 @@ block content
         uploadText.textContent = file.name;
         uploadHelp.textContent = 'New image selected. Click again to change it.';
       });
+    }
+
+  script.
+    const approvedPickupValues = [
+      'University of Roehampton Main Campus, Grove House, Roehampton Lane, London, SW15 5PJ',
+      'Putney Library, 5/7 Disraeli Road, London, SW15 2DR',
+      'Barnes Station, Station Road, Barnes, Greater London, SW13 0HT',
+      'Southfields Library, 300 Wimbledon Park Road, London, SW19 6NL',
+      'Wandsworth Town Hall, Wandsworth High Street, London, SW18 2PU'
+    ];
+
+    const pickupHiddenInput = document.getElementById('pickup_location');
+    const approvedRadio = document.getElementById('pickupMethodApproved');
+    const manualRadio = document.getElementById('pickupMethodManual');
+    const approvedPanel = document.getElementById('approvedPickupPanel');
+    const manualPanel = document.getElementById('manualPickupPanel');
+    const approvedSelect = document.getElementById('approvedPickupSelect');
+    const manualInput = document.getElementById('manualPickupAddress');
+    const listingForm = document.querySelector('.create-listing-form');
+
+    function setPickupMode(mode) {
+      if (!approvedPanel || !manualPanel) {
+        return;
+      }
+
+      if (mode === 'approved') {
+        approvedPanel.style.display = 'block';
+        manualPanel.style.display = 'none';
+      } else {
+        approvedPanel.style.display = 'none';
+        manualPanel.style.display = 'block';
+      }
+    }
+
+    function updatePickupHiddenValue() {
+      if (!pickupHiddenInput) {
+        return;
+      }
+
+      if (approvedRadio && approvedRadio.checked) {
+        pickupHiddenInput.value = approvedSelect ? approvedSelect.value.trim() : '';
+      } else {
+        pickupHiddenInput.value = manualInput ? manualInput.value.trim() : '';
+      }
+    }
+
+    if (pickupHiddenInput && approvedRadio && manualRadio) {
+      const existingValue = pickupHiddenInput.value.trim();
+
+      if (approvedPickupValues.includes(existingValue)) {
+        approvedRadio.checked = true;
+        if (approvedSelect) {
+          approvedSelect.value = existingValue;
+        }
+        setPickupMode('approved');
+      } else {
+        manualRadio.checked = true;
+        if (manualInput) {
+          manualInput.value = existingValue;
+        }
+        setPickupMode('manual');
+      }
+
+      approvedRadio.addEventListener('change', function () {
+        setPickupMode('approved');
+        updatePickupHiddenValue();
+      });
+
+      manualRadio.addEventListener('change', function () {
+        setPickupMode('manual');
+        updatePickupHiddenValue();
+      });
+
+      if (approvedSelect) {
+        approvedSelect.addEventListener('change', updatePickupHiddenValue);
+      }
+
+      if (manualInput) {
+        manualInput.addEventListener('input', updatePickupHiddenValue);
+      }
+
+      if (listingForm) {
+        listingForm.addEventListener('submit', function (event) {
+          updatePickupHiddenValue();
+
+          if (!pickupHiddenInput.value.trim()) {
+            event.preventDefault();
+            alert('Please select an approved pickup point or enter a manual pickup address.');
+          }
+        });
+      }
     }
