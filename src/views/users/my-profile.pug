@@ -1,0 +1,84 @@
+﻿extends ../layout
+
+block content
+  - const formatDate = (value) => {
+  -   if (!value) return 'Unknown';
+  -   const date = new Date(value);
+  -   return Number.isNaN(date.getTime()) ? 'Unknown' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  - }
+  - const statusLabel = (value) => value ? String(value).replace('_', ' ') : 'UNKNOWN'
+
+  .my-profile-page
+    .my-profile-hero
+      .my-profile-avatar= user.username ? user.username.charAt(0).toUpperCase() : 'U'
+
+      .my-profile-info
+        span.my-profile-label My Account
+        h1= user.username
+        p This is your private MCYAM Food Exchange profile. Your email is only shown to you.
+        span.my-profile-joined Member since #{formatDate(user.created_at)}
+
+      .my-profile-actions
+        a(href='/my-listings') My Listings
+        a(href='/my-claims') My Claims
+        a(href='/logout') Logout
+
+    .my-profile-summary
+      .my-profile-stat
+        span Listings Created
+        strong= stats && stats.listings_created ? stats.listings_created : 0
+      .my-profile-stat
+        span Active Listings
+        strong= stats && stats.active_listings ? stats.active_listings : 0
+      .my-profile-stat
+        span Completed Listings
+        strong= stats && stats.completed_listings ? stats.completed_listings : 0
+      .my-profile-stat
+        span Claims Made
+        strong= stats && stats.claims_made ? stats.claims_made : 0
+
+    .my-profile-grid
+      section.my-profile-card
+        h2 Account Details
+        .my-profile-detail-row
+          span Username
+          strong= user.username
+        .my-profile-detail-row
+          span Email
+          strong= user.email
+        .my-profile-detail-row
+          span Role
+          strong= user.role || 'user'
+        .my-profile-detail-row
+          span User ID
+          strong= user.user_id
+
+      section.my-profile-card
+        h2 Recent Listings
+
+        if recentListings && recentListings.length
+          .my-profile-list
+            each listing in recentListings
+              a.my-profile-list-item(href=`/listings/${listing.listing_id}`)
+                div
+                  strong= listing.title
+                  span Expiry: #{formatDate(listing.expiry_date)}
+                em= statusLabel(listing.status)
+        else
+          p.my-profile-empty You have not created any listings yet.
+          a.my-profile-inline-button(href='/listings/create') Create Listing
+
+      section.my-profile-card
+        h2 Recent Claims
+
+        if recentClaims && recentClaims.length
+          .my-profile-list
+            each claim in recentClaims
+              a.my-profile-list-item(href=`/listings/${claim.listing_id}`)
+                div
+                  strong= claim.title
+                  span Claimed: #{formatDate(claim.called_at)}
+                em= statusLabel(claim.status)
+        else
+          p.my-profile-empty You have not claimed any listings yet.
+          a.my-profile-inline-button(href='/listings') Browse Listings
