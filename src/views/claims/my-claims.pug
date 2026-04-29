@@ -1,0 +1,79 @@
+﻿extends ../layout
+
+block content
+  - const formatDate = (value) => {
+  -   if (!value) return 'Not set';
+  -   const date = new Date(value);
+  -   return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  - }
+  - const formatDateTime = (value) => {
+  -   if (!value) return 'Not set';
+  -   const date = new Date(value);
+  -   return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  - }
+  - const statusLabel = (value) => value ? String(value).replace('_', ' ') : 'UNKNOWN'
+  - const activeCount = counts && counts.active_count ? counts.active_count : 0
+  - const pendingCount = counts && counts.pending_count ? counts.pending_count : 0
+  - const completedCount = counts && counts.completed_count ? counts.completed_count : 0
+  - const expiredCount = counts && counts.expired_count ? counts.expired_count : 0
+
+  .my-claims-page
+    aside.my-claims-sidebar
+      h1 My Claims
+      p Track the food items you have requested from other community members.
+      a.my-claims-sidebar-button(href='/listings') Available Listings
+
+    section.my-claims-main
+      .my-claims-header
+        div
+          h2 My Claims
+          p Only food claimed by your logged-in account is shown here.
+        a.my-claims-header-button(href='/listings') Available Listings
+
+      .my-claims-tabs
+        a(class=selectedTab === 'active' ? 'claim-tab claim-tab--active' : 'claim-tab', href='/my-claims?tab=active')
+          | Active
+          span= activeCount
+        a(class=selectedTab === 'pending' ? 'claim-tab claim-tab--active' : 'claim-tab', href='/my-claims?tab=pending')
+          | Pending
+          span= pendingCount
+        a(class=selectedTab === 'completed' ? 'claim-tab claim-tab--active' : 'claim-tab', href='/my-claims?tab=completed')
+          | Completed
+          span= completedCount
+        a(class=selectedTab === 'expired' ? 'claim-tab claim-tab--active' : 'claim-tab', href='/my-claims?tab=expired')
+          | Expired
+          span= expiredCount
+
+      if claims && claims.length
+        .my-claims-grid
+          each claim in claims
+            - const cleanStatus = String(claim.claim_status || 'UNKNOWN').toLowerCase().replace('_', '-')
+            article.my-claim-card
+              .my-claim-image
+                if claim.image_path
+                  img.my-claim-card-image(src=claim.image_path, alt=claim.title)
+                else
+                  span= claim.category_name ? claim.category_name.charAt(0).toUpperCase() : 'F'
+
+              .my-claim-content
+                .my-claim-top
+                  div
+                    h3= claim.title
+                    p= claim.description || 'No description provided.'
+                  span(class=`my-claim-status my-claim-status--${cleanStatus}`)= statusLabel(claim.claim_status)
+
+                .my-claim-details
+                  span 📦 Quantity: #{claim.quantity}
+                  span 🗂 Category: #{claim.category_name}
+                  span 👤 Owner: #{claim.owner_username}
+                  span 📍 #{claim.pickup_location}
+                  span 📅 Expiry: #{formatDate(claim.expiry_date)}
+                  span 🕒 Claimed: #{formatDateTime(claim.called_at)}
+
+                .my-claim-actions
+                  a(href=`/listings/${claim.listing_id}`) View Details
+      else
+        .my-claims-empty
+          h3 No claims in this section
+          p Browse available listings and submit a claim request.
+          a(href='/listings') Browse Available Listings

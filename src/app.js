@@ -43,6 +43,7 @@ app.get('/', (req, res) => {
 
 app.use('/', authRoutes);
 app.get('/my-listings', requireLogin, listingController.getMyListings);
+app.get('/my-claims', requireLogin, listingController.getMyClaims);
 app.use('/users', requireLogin, usersRoutes);
 app.use('/listings', requireLogin, listingsRoutes);
 app.use('/categories', requireLogin, categoryRoutes);
@@ -50,4 +51,5 @@ app.use('/categories', requireLogin, categoryRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 

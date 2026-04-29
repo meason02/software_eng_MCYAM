@@ -147,7 +147,7 @@ exports.getAllListings = async (req, res) => {
       JOIN CATEGORY c ON fl.category_id = c.category_id
     `;
 
-    const conditions = [];
+    const conditions = ["fl.status <> 'REMOVED'"];
     const params = [];
 
     if (q) {
@@ -989,3 +989,84 @@ exports.removeListing = async (req, res) => {
     return res.status(500).send('Failed to remove listing');
   }
 };
+
+exports.getMyClaims = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+  const tab = (req.query.tab || 'active').trim().toLowerCase();
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  const validTabs = ['active', 'pending', 'completed', 'expired'];
+  const selectedTab = validTabs.includes(tab) ? tab : 'active';
+
+  const conditions = ['cl.user_id = ?'];
+  const params = [currentUserId];
+
+  if (selectedTab === 'active') {
+    conditions.push("cl.status = 'CONFIRMED'");
+    conditions.push('(fl.expiry_date IS NULL OR fl.expiry_date >= CURDATE())');
+  }
+
+  if (selectedTab === 'pending') {
+    conditions.push("cl.status = 'PENDING'");
+  }
+
+  if (selectedTab === 'completed') {
+    conditions.push("cl.status = 'COMPLETED'");
+  }
+
+  if (selectedTab === 'expired') {
+    conditions.push("fl.expiry_date < CURDATE()");
+    conditions.push("cl.status <> 'COMPLETED'");
+  }
+
+  try {
+    const [countRows] = await db.query(`
+      SELECT
+        SUM(CASE WHEN cl.status = 'CONFIRMED' AND (fl.expiry_date IS NULL OR fl.expiry_date >= CURDATE()) THEN 1 ELSE 0 END) AS active_count,
+        SUM(CASE WHEN cl.status = 'PENDING' THEN 1 ELSE 0 END) AS pending_count,
+        SUM(CASE WHEN cl.status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_count,
+        SUM(CASE WHEN fl.expiry_date < CURDATE() AND cl.status <> 'COMPLETED' THEN 1 ELSE 0 END) AS expired_count
+      FROM CLAIM cl
+      JOIN FOOD_LISTING fl ON cl.listing_id = fl.listing_id
+      WHERE cl.user_id = ?
+    `, [currentUserId]);
+
+    const [claims] = await db.query(`
+      SELECT
+        cl.claims_id,
+        cl.called_at,
+        cl.status AS claim_status,
+        fl.listing_id,
+        fl.title,
+        fl.description,
+        fl.quantity,
+        fl.expiry_date,
+        fl.collection_start,
+        fl.collection_end,
+        fl.pickup_location,
+        fl.status AS listing_status,
+        c.name AS category_name,
+        u.username AS owner_username
+      FROM CLAIM cl
+      JOIN FOOD_LISTING fl ON cl.listing_id = fl.listing_id
+      JOIN CATEGORY c ON fl.category_id = c.category_id
+      JOIN USER u ON fl.user_id = u.user_id
+      WHERE ${conditions.join(' AND ')}
+      ORDER BY cl.called_at DESC, cl.claims_id DESC
+    `, params);
+
+    return res.render('claims/my-claims', {
+      title: 'My Claims',
+      claims: attachListingImages(claims),
+      selectedTab,
+      counts: countRows[0] || {}
+    });
+  } catch (error) {
+    console.error('My claims error:', error);
+    return res.status(500).send('Failed to load my claims');
+  }
+};
+
