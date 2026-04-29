@@ -1,35 +1,51 @@
-extends ../layout
+﻿extends ../layout
 
 block content
-  h2 User Profile
+  - const formatDate = (value) => { if (!value) return 'Unknown'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Unknown' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  - const statusLabel = (value) => value ? String(value).replace('_', ' ') : 'UNKNOWN'
 
-  .card
-    h3= user.username
-    p
-      strong User ID:
-      |  #{user.user_id}
-    p
-      strong Email:
-      |  #{user.email}
-    p
-      strong Joined:
-      |  #{user.created_at}
+  .public-profile-page
+    .public-profile-hero
+      .public-profile-avatar= user.username ? user.username.charAt(0).toUpperCase() : 'U'
 
-  h2 User Listings
+      .public-profile-info
+        span.public-profile-label Community Member
+        h1= user.username
+        p Privacy-friendly public profile for a local MCYAM Food Exchange member.
+        span.public-profile-joined Member since #{formatDate(user.created_at)}
 
-  if listings.length
-    each listing in listings
-      .card
-        h3= listing.title
-        p
-          strong Listing ID:
-          |  #{listing.listing_id}
-        p
-          strong Status:
-          |  #{listing.status}
-        p
-          strong Created:
-          |  #{listing.created_at}
-  else
-    .card
-      p This user has no listings.
+      a.public-profile-back(href='/users') Back to Community
+
+    .public-profile-summary
+      .public-summary-card
+        span Listings Shared
+        strong= listings ? listings.length : 0
+
+      .public-summary-card
+        span Public Contact
+        strong Private
+
+      .public-summary-card
+        span Profile Type
+        strong Community
+
+    section.public-profile-section
+      .public-section-header
+        h2 Public Listings
+        p These are listings shared by this community member. Private account details such as email are hidden.
+
+      if listings && listings.length
+        .public-listings-grid
+          each listing in listings
+            - const cleanStatus = String(listing.status || 'UNKNOWN').toLowerCase().replace('_', '-')
+            .public-listing-card
+              .public-listing-icon 🍽
+              .public-listing-content
+                h3= listing.title
+                span(class=`public-status public-status--${cleanStatus}`)= statusLabel(listing.status)
+                p Created #{formatDate(listing.created_at)}
+                a(href=`/listings/${listing.listing_id}`) View Listing
+      else
+        .public-empty-card
+          h3 No public listings yet
+          p This community member has not shared any listings yet.
