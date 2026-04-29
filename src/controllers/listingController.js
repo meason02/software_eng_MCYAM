@@ -147,7 +147,7 @@ exports.getAllListings = async (req, res) => {
       JOIN CATEGORY c ON fl.category_id = c.category_id
     `;
 
-    const conditions = ["fl.status <> 'REMOVED'"];
+    const conditions = ["fl.status <> 'REMOVED'", "(fl.expiry_date IS NULL OR fl.expiry_date >= CURDATE())"];
     const params = [];
 
     if (q) {
@@ -596,7 +596,7 @@ exports.getListingById = async (req, res) => {
       listing: { ...rows[0], image_path: getListingImagePath(rows[0].listing_id) },
       claimState: {
         activeClaim,
-        canClaim: currentUserId !== null && !isOwner && rows[0].status === 'AVAILABLE' && !activeClaim,
+        canClaim: currentUserId !== null && !isOwner && rows[0].status === 'AVAILABLE' && !activeClaim && !isExpired && !isRemoved,
         isOwner,
         canConfirm: isOwner && !!activeClaim && activeClaim.status === 'PENDING',
         canReject: isOwner && !!activeClaim && activeClaim.status === 'PENDING',
@@ -744,6 +744,13 @@ exports.showEditListing = async (req, res) => {
       return res.status(403).send('You are not allowed to edit this listing');
     }
 
+    const isExpired = listing.expiry_date && new Date(listing.expiry_date) < new Date(new Date().toDateString());
+    const isRemoved = listing.status === 'REMOVED';
+
+    if (isExpired || isRemoved) {
+      return res.status(403).send('Expired or removed listings cannot be edited.');
+    }
+
     const categories = await getCategories();
 
     return res.render('listings/edit', {
@@ -877,7 +884,7 @@ exports.updateListing = async (req, res) => {
 
   try {
     const [listingRows] = await db.query(
-      'SELECT listing_id, user_id FROM FOOD_LISTING WHERE listing_id = ?',
+      'SELECT listing_id, user_id, expiry_date, status FROM FOOD_LISTING WHERE listing_id = ?',
       [listingId]
     );
 
@@ -889,6 +896,14 @@ exports.updateListing = async (req, res) => {
     if (listingRows[0].user_id !== currentUserId) {
       deleteTempUpload(req.file);
       return res.status(403).send('You are not allowed to edit this listing');
+    }
+
+    const isExpired = listingRows[0].expiry_date && new Date(listingRows[0].expiry_date) < new Date(new Date().toDateString());
+    const isRemoved = listingRows[0].status === 'REMOVED';
+
+    if (isExpired || isRemoved) {
+      deleteTempUpload(req.file);
+      return res.status(403).send('Expired or removed listings cannot be edited.');
     }
 
     const [categoryRows] = await db.query(
@@ -966,7 +981,7 @@ exports.removeListing = async (req, res) => {
 
   try {
     const [listingRows] = await db.query(
-      'SELECT listing_id, user_id FROM FOOD_LISTING WHERE listing_id = ?',
+      'SELECT listing_id, user_id, expiry_date, status FROM FOOD_LISTING WHERE listing_id = ?',
       [listingId]
     );
 
@@ -1069,4 +1084,7 @@ exports.getMyClaims = async (req, res) => {
     return res.status(500).send('Failed to load my claims');
   }
 };
+
+
+
 
