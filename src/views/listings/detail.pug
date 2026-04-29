@@ -1,105 +1,110 @@
 ﻿extends ../layout
 
 block content
-  h1= listing.title
+  - const formatDate = (value) => { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  - const formatDateTime = (value) => { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+  - const statusLabel = (value) => value ? String(value).replace('_', ' ') : 'UNKNOWN'
+  - const cleanStatus = String(listing.status || 'UNKNOWN').toLowerCase().replace('_', '-')
 
-  if listing.image_path
-    .listing-detail-image-card
-      img.listing-detail-image(src=listing.image_path, alt=listing.title)
-  else
-    .listing-detail-image-card.listing-detail-image-card--empty
-      span No image uploaded for this listing yet
+  .listing-detail-page
+    .listing-detail-topbar
+      a(href='/listings') ← Back to Listings
+      if claimState && claimState.isOwner
+        a(href='/my-listings') My Listings
 
-  if claimFeedback
-    .card
-      if claimFeedback.type === 'success'
-        h3 Claim Update
-      else
-        h3 Claim Error
-      p= claimFeedback.message
+    .listing-detail-hero
+      .listing-detail-media
+        if listing.image_path
+          img(src=listing.image_path, alt=listing.title)
+        else
+          .listing-detail-placeholder
+            span= listing.category_name ? listing.category_name.charAt(0).toUpperCase() : 'F'
 
-  .card
-    p
-      strong Description:
-      |  #{listing.description}
-    p
-      strong Quantity:
-      |  #{listing.quantity}
-    p
-      strong Expiry Date:
-      |  #{new Date(listing.expiry_date).toDateString()}
-    p
-      strong Collection Start:
-      |  #{new Date(listing.collection_start).toLocaleString()}
-    p
-      strong Collection End:
-      |  #{new Date(listing.collection_end).toLocaleString()}
-    p
-      strong Pickup Location:
-      |  #{listing.pickup_location}
-    p
-      strong Status:
-      |  #{listing.status}
-    p
-      strong Category:
-      |  #{listing.category_name}
-    p
-      strong Owner:
-      |  #{listing.owner_username}
-    p
-      strong Owner Email:
-      |  #{listing.owner_email}
+      .listing-detail-summary
+        span(class=`detail-status detail-status--${cleanStatus}`)= statusLabel(listing.status)
+        h1= listing.title
+        p= listing.description
+
+        .detail-owner-box
+          .detail-owner-avatar= listing.owner_username ? listing.owner_username.charAt(0).toUpperCase() : 'U'
+          div
+            span Shared by
+            strong= listing.owner_username
+
+        .detail-action-card
+          if claimFeedback
+            .detail-feedback(class=claimFeedback.type === 'success' ? 'detail-feedback--success' : 'detail-feedback--error')
+              strong= claimFeedback.type === 'success' ? 'Claim Update' : 'Claim Error'
+              p= claimFeedback.message
+
+          if claimState && claimState.canClaim
+            h2 Claim this food
+            p Send a claim request to the listing owner. They can confirm or reject the request.
+            form(method='POST', action=`/listings/${listing.listing_id}/claim`)
+              button.detail-primary-button(type='submit') Submit Claim Request
+          else if claimState && claimState.isOwner && claimState.activeClaim
+            h2 Manage claim request
+            p A community member has requested this listing.
+            .detail-claim-info
+              span Claimant: #{claimState.activeClaim.claimant_username}
+              span Status: #{claimState.activeClaim.status}
+              span Claimed: #{formatDateTime(claimState.activeClaim.called_at)}
+
+            .detail-owner-actions
+              if claimState.canConfirm
+                form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
+                  input(type='hidden', name='action', value='confirm')
+                  button.detail-primary-button(type='submit') Confirm Claim
+
+              if claimState.canReject
+                form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
+                  input(type='hidden', name='action', value='reject')
+                  button.detail-danger-button(type='submit') Reject Claim
+
+              if claimState.canComplete
+                form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
+                  input(type='hidden', name='action', value='complete')
+                  button.detail-primary-button(type='submit') Complete Claim
+          else if claimState && claimState.isOwner
+            h2 Your listing
+            p No live claim exists for this listing yet.
+            a.detail-secondary-button(href='/my-listings') Manage My Listings
+          else if claimState && claimState.activeClaim
+            h2 Claim status
+            p This listing already has an active claim.
+            .detail-claim-info
+              span Status: #{claimState.activeClaim.status}
+              span Claimed: #{formatDateTime(claimState.activeClaim.called_at)}
+          else
+            h2 Not available
+            p This listing is not currently available for claiming.
+
+    .listing-detail-info-grid
+      .detail-info-card
+        span Category
+        strong= listing.category_name
+
+      .detail-info-card
+        span Quantity
+        strong= listing.quantity
+
+      .detail-info-card
+        span Expiry Date
+        strong= formatDate(listing.expiry_date)
+
+      .detail-info-card
+        span Pickup Location
+        strong= listing.pickup_location
+
+      .detail-info-card
+        span Collection Start
+        strong= formatDateTime(listing.collection_start)
+
+      .detail-info-card
+        span Collection End
+        strong= formatDateTime(listing.collection_end)
+
     if listing.tags
-      p
-        strong Tags:
-        |  #{listing.tags}
-
-  .card
-    h3 Claim This Listing
-
-    if claimState && claimState.canClaim
-      form(method='POST', action=`/listings/${listing.listing_id}/claim`)
-        button(type='submit') Submit Claim Request
-    else if claimState && claimState.isOwner && claimState.activeClaim
-      p
-        strong Claimant:
-        |  #{claimState.activeClaim.claimant_username}
-      p
-        strong Claimant Email:
-        |  #{claimState.activeClaim.claimant_email}
-      p
-        strong Current Claim Status:
-        |  #{claimState.activeClaim.status}
-      p
-        strong Claimed At:
-        |  #{new Date(claimState.activeClaim.called_at).toLocaleString()}
-
-      if claimState.canConfirm
-        form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
-          input(type='hidden', name='action', value='confirm')
-          button(type='submit') Confirm Claim
-
-      if claimState.canReject
-        form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
-          input(type='hidden', name='action', value='reject')
-          button(type='submit') Reject Claim
-
-      if claimState.canComplete
-        form(method='POST', action=`/listings/${listing.listing_id}/claim/${claimState.activeClaim.claims_id}/status`)
-          input(type='hidden', name='action', value='complete')
-          button(type='submit') Complete Claim
-    else if claimState && claimState.isOwner
-      p No live claim exists for this listing.
-    else if claimState && claimState.activeClaim
-      p
-        strong Current Claim Status:
-        |  #{claimState.activeClaim.status}
-      p
-        strong Claimed At:
-        |  #{new Date(claimState.activeClaim.called_at).toLocaleString()}
-    else
-      p This listing is not currently available for claiming.
-
-  p
-    a(href='/listings') Back to Listings
-
+      .listing-detail-tags
+        h2 Tags
+        p= listing.tags
