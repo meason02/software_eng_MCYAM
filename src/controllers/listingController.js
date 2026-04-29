@@ -590,6 +590,12 @@ exports.getListingById = async (req, res) => {
     const currentUserId = req.session?.user?.user_id || null;
     const activeClaim = activeClaimRows.length > 0 ? activeClaimRows[0] : null;
     const isOwner = currentUserId !== null && rows[0].owner_id === currentUserId;
+    const isExpired = rows[0].expiry_date && new Date(rows[0].expiry_date) < new Date(new Date().toDateString());
+    const isRemoved = rows[0].status === 'REMOVED';
+
+    if ((isExpired || isRemoved) && !isOwner) {
+      return res.status(404).send('Listing not found');
+    }
 
     return res.render('listings/detail', {
       title: rows[0].title,
@@ -1084,6 +1090,8 @@ exports.getMyClaims = async (req, res) => {
     return res.status(500).send('Failed to load my claims');
   }
 };
+
+
 
 
 
