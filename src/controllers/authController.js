@@ -1,4 +1,4 @@
-const db = require('../config/db');
+﻿const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 const renderRegister = (res, formData = {}, errors = [], statusCode = 200) => {
@@ -9,11 +9,12 @@ const renderRegister = (res, formData = {}, errors = [], statusCode = 200) => {
   });
 };
 
-const renderLogin = (res, formData = {}, errors = [], statusCode = 200) => {
+const renderLogin = (res, formData = {}, errors = [], statusCode = 200, success = null) => {
   return res.status(statusCode).render('auth/login', {
     title: 'Login',
     errors,
-    formData
+    formData,
+    success
   });
 };
 
@@ -25,9 +26,12 @@ exports.register = async (req, res) => {
   const username = (req.body.username || '').trim();
   const email = (req.body.email || '').trim();
   const password = req.body.password || '';
+  const confirmPassword = req.body.confirmPassword || '';
+  const termsAccepted = req.body.terms === 'on';
 
   const errors = [];
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
   if (!username) {
     errors.push('Username is required');
@@ -43,8 +47,18 @@ exports.register = async (req, res) => {
 
   if (!password) {
     errors.push('Password is required');
-  } else if (password.length < 6) {
-    errors.push('Password must be at least 6 characters');
+  } else if (!passwordPattern.test(password)) {
+    errors.push('Password must be at least 8 characters and include uppercase, lowercase and a number');
+  }
+
+  if (!confirmPassword) {
+    errors.push('Confirm password is required');
+  } else if (password !== confirmPassword) {
+    errors.push('Passwords do not match. Please re-enter your password.');
+  }
+
+  if (!termsAccepted) {
+    errors.push('You must agree to the Terms and Conditions before creating an account.');
   }
 
   if (errors.length > 0) {
@@ -73,7 +87,7 @@ exports.register = async (req, res) => {
       [username, email, passwordHash, 'user']
     );
 
-    return res.redirect('/login');
+    return res.redirect('/login?registered=success');
   } catch (error) {
     console.error('Register error:', error);
     return renderRegister(
@@ -86,20 +100,23 @@ exports.register = async (req, res) => {
 };
 
 exports.showLogin = (req, res) => {
-  return renderLogin(res, {}, []);
+  const success = req.query.registered === 'success'
+    ? 'Account created successfully. Please log in.'
+    : null;
+
+  return renderLogin(res, {}, [], 200, success);
 };
 
 exports.login = async (req, res) => {
-  const email = (req.body.email || '').trim();
+  const identifier = (req.body.identifier || req.body.email || '').trim();
   const password = req.body.password || '';
 
   const errors = [];
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!email) {
-    errors.push('Email is required');
-  } else if (!emailPattern.test(email)) {
-    errors.push('Enter a valid email address');
+  if (!identifier) {
+    errors.push('Email or username is required');
+  } else if (identifier.length > 100) {
+    errors.push('Email or username must be 100 characters or fewer');
   }
 
   if (!password) {
@@ -107,20 +124,20 @@ exports.login = async (req, res) => {
   }
 
   if (errors.length > 0) {
-    return renderLogin(res, { email }, errors, 400);
+    return renderLogin(res, { identifier }, errors, 400);
   }
 
   try {
     const [rows] = await db.query(
-      'SELECT user_id, username, email, password_hash, role FROM USER WHERE email = ?',
-      [email]
+      'SELECT user_id, username, email, password_hash, role FROM USER WHERE email = ? OR username = ?',
+      [identifier, identifier]
     );
 
     if (rows.length === 0) {
       return renderLogin(
         res,
-        { email },
-        ['Invalid email or password'],
+        { identifier },
+        ['Invalid username/email or password'],
         401
       );
     }
@@ -131,8 +148,8 @@ exports.login = async (req, res) => {
     if (!passwordMatches) {
       return renderLogin(
         res,
-        { email },
-        ['Invalid email or password'],
+        { identifier },
+        ['Invalid username/email or password'],
         401
       );
     }
@@ -149,7 +166,7 @@ exports.login = async (req, res) => {
     console.error('Login error:', error);
     return renderLogin(
       res,
-      { email },
+      { identifier },
       ['Server error. Please try again.'],
       500
     );

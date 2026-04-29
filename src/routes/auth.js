@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 
@@ -7,6 +7,12 @@ router.post('/register', authController.register);
 
 router.get('/login', authController.showLogin);
 router.post('/login', authController.login);
+
+router.get('/terms', (req, res) => {
+  res.render('auth/terms', {
+    title: 'Terms and Conditions'
+  });
+});
 
 router.get('/logout', authController.logout);
 

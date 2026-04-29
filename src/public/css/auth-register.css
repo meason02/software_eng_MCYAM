@@ -1,0 +1,360 @@
+﻿* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body.register-page-body {
+  min-height: 100vh;
+  background: #FFFFFF;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111827;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.register-page {
+  width: 100vw;
+  min-height: 100vh;
+  background: #FFFFFF;
+  display: grid;
+  grid-template-columns: 49% 51%;
+}
+
+.register-left {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: #FFFFFF;
+  border-right: 1px solid #E5E7EB;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-logo {
+  height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 28px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.register-logo-image {
+  width: 230px;
+  max-height: 74px;
+  object-fit: contain;
+  display: block;
+}
+
+.register-green-panel {
+  position: relative;
+  flex: 1;
+  width: calc(100% - 34px);
+  background: linear-gradient(180deg, #2E7D32 0%, #176D35 100%);
+  border-top-right-radius: 120px;
+  border-bottom-right-radius: 120px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-panel-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background:
+    radial-gradient(circle at 18% 13%, transparent 0 30px, rgba(255,255,255,0.85) 31px 33px, transparent 34px),
+    radial-gradient(circle at 72% 16%, transparent 0 28px, rgba(255,255,255,0.75) 29px 31px, transparent 32px),
+    radial-gradient(circle at 86% 46%, transparent 0 40px, rgba(255,255,255,0.75) 41px 43px, transparent 44px),
+    radial-gradient(circle at 20% 72%, transparent 0 34px, rgba(255,255,255,0.75) 35px 37px, transparent 38px);
+}
+
+.register-panel-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 430px;
+  text-align: center;
+  color: #FFFFFF;
+  padding: 18px;
+}
+
+.register-panel-content h1 {
+  margin: 0 0 16px;
+  font-size: 43px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.register-panel-content p {
+  margin: 0 auto 38px;
+  max-width: 340px;
+  color: #FFFFFF;
+  font-size: 23px;
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+.register-login-button {
+  width: 260px;
+  height: 62px;
+  margin: 0 auto;
+  border: 2px solid rgba(255,255,255,0.9);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.03);
+}
+
+.register-login-button:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.register-right {
+  min-height: 100vh;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-tabs {
+  height: 86px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.register-tab {
+  height: 86px;
+  min-height: 86px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667085;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  border-left: 1px solid #E5E7EB;
+}
+
+.register-tab:first-child {
+  border-left: 0;
+}
+
+.register-tab-active {
+  color: #2E7D32;
+}
+
+.register-tab-active::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 5px;
+  background: #2E7D32;
+  border-radius: 999px;
+}
+
+.register-main {
+  flex: 1;
+  padding: 34px 72px 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-arrow {
+  color: #C8D7F0;
+  font-size: 34px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.register-welcome-text {
+  margin: 0 0 26px;
+  color: #667085;
+  font-size: 20px;
+  text-align: center;
+  max-width: 720px;
+}
+
+.register-alert {
+  width: min(100%, 620px);
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.register-alert ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.register-alert-error {
+  background: #FDECEC;
+  color: #D32F2F;
+  border: 1px solid rgba(211,47,47,0.2);
+}
+
+.register-card {
+  width: min(100%, 620px);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 22px;
+  padding: 34px 46px 38px;
+  box-shadow: 0 14px 30px rgba(17, 24, 39, 0.12);
+}
+
+.register-card h2 {
+  margin: 0 0 24px;
+  color: #111827;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.register-field {
+  margin-bottom: 20px;
+}
+
+.register-field label {
+  display: block;
+  margin-bottom: 9px;
+  color: #667085;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.register-input-wrap {
+  position: relative;
+}
+
+.register-input-icon {
+  position: absolute;
+  left: 21px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7D8496;
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.register-input-wrap input {
+  width: 100%;
+  height: 58px;
+  border: 1px solid #D9DEE7;
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 0 18px 0 64px;
+  color: #111827;
+  font-size: 16px;
+  outline: none;
+}
+
+.register-input-wrap input::placeholder {
+  color: #98A2B3;
+}
+
+.register-input-wrap input:focus {
+  border-color: #2E7D32;
+  box-shadow: 0 0 0 3px rgba(46,125,50,0.12);
+}
+
+.register-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 20px;
+  color: #667085;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.register-terms input {
+  margin-top: 3px;
+  accent-color: #2E7D32;
+}
+
+.register-terms a {
+  color: #2E7D32;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.register-submit {
+  width: 100%;
+  height: 60px;
+  border: 0;
+  border-radius: 10px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  font-size: 21px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.register-submit:hover {
+  background: #256C2A;
+}
+
+.register-secure-note {
+  margin-top: 22px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #7D8496;
+  font-size: 15px;
+}
+
+.register-secure-icon {
+  font-size: 20px;
+}
+
+@media (max-width: 1100px) {
+  .register-page {
+    grid-template-columns: 1fr;
+  }
+
+  .register-left {
+    display: none;
+  }
+
+  .register-main {
+    padding: 34px 24px 54px;
+  }
+
+  .register-tabs {
+    height: 84px;
+  }
+
+  .register-tab {
+    height: 84px;
+    min-height: 84px;
+  }
+
+  .register-card {
+    padding: 34px 24px;
+  }
+}

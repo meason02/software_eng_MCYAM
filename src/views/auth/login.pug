@@ -1,29 +1,79 @@
-extends ../layout
+﻿doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Login | MCYAM Food Exchange
+    link(rel="stylesheet", href="/css/auth-login.css")
 
-block content
-  h1 Login
+  body.login-page-body
+    .login-page
+      .login-left
+        .login-logo
+          img.login-logo-image(src="/images/logo.png", alt="MCYAM Food Exchange logo")
 
-  if errors && errors.length
-    .card
-      h3 Login Error
-      ul
-        each error in errors
-          li= error
+        .login-green-panel
+          .login-panel-pattern
+          .login-panel-content
+            h1 Welcome!
+            p Sign in to claim food and reduce waste.
+            a.login-create-button(href="/register")
+              span.login-create-icon 👥
+              span Create account
 
-  form(method='POST', action='/login')
-    .card
-      p
-        label(for='email') Email
-        br
-        input#email(type='email', name='email', required, value=formData && formData.email ? formData.email : '')
+      .login-right
+        .login-tabs
+          a.login-tab.login-tab-active(href="/login") Login
+          a.login-tab(href="/register") Create account
 
-      p
-        label(for='password') Password
-        br
-        input#password(type='password', name='password', required)
+        .login-main
+          .login-arrow ↓
+          p.login-welcome-text Welcome back! Please sign in to your account.
 
-      p
-        button(type='submit') Login
+          if errors && errors.length
+            .login-alert.login-alert-error
+              ul
+                each error in errors
+                  li= error
 
-  p
-    a(href='/register') Need an account? Register
+          if error
+            .login-alert.login-alert-error
+              p= error
+
+          if success
+            .login-alert.login-alert-success
+              p= success
+
+          .login-card
+            h2 Login
+
+            form(method="POST", action="/login")
+              .login-field
+                label(for="identifier") Email / Username
+                .login-input-wrap
+                  span.login-input-icon ✉
+                  input#identifier(
+                    type="text",
+                    name="identifier",
+                    required,
+                    value=formData && formData.identifier ? formData.identifier : "",
+                    placeholder="Enter your email or username"
+                  )
+
+              .login-field
+                label(for="password") Password
+                .login-input-wrap
+                  span.login-input-icon 🔒
+                  input#password(
+                    type="password",
+                    name="password",
+                    required,
+                    placeholder="Enter your password"
+                  )
+
+              button.login-submit(type="submit") Login
+
+          .login-secure-note
+            span.login-secure-icon 🛡
+            span Your information is secure and encrypted.
+

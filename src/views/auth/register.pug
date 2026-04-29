@@ -1,34 +1,100 @@
-extends ../layout
+﻿doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Create Account | MCYAM Food Exchange
+    link(rel="stylesheet", href="/css/auth-register.css")
 
-block content
-  h1 Register
+  body.register-page-body
+    .register-page
+      .register-left
+        .register-logo
+          img.register-logo-image(src="/images/logo.png", alt="MCYAM Food Exchange logo")
 
-  if errors && errors.length
-    .card
-      h3 Validation Errors
-      ul
-        each error in errors
-          li= error
+        .register-green-panel
+          .register-panel-pattern
+          .register-panel-content
+            h1 Welcome Back!
+            p Already have an account? Log in and continue reducing food waste.
+            a.register-login-button(href="/login")
+              span.register-login-icon 🔐
+              span Login
 
-  form(method='POST', action='/register')
-    .card
-      p
-        label(for='username') Username
-        br
-        input#username(type='text', name='username', required, value=formData && formData.username ? formData.username : '')
+      .register-right
+        .register-tabs
+          a.register-tab(href="/login") Login
+          a.register-tab.register-tab-active(href="/register") Create account
 
-      p
-        label(for='email') Email
-        br
-        input#email(type='email', name='email', required, value=formData && formData.email ? formData.email : '')
+        .register-main
+          .register-arrow ↓
+          p.register-welcome-text Create your MCYAM account to start sharing and claiming surplus food.
 
-      p
-        label(for='password') Password
-        br
-        input#password(type='password', name='password', required)
+          if errors && errors.length
+            .register-alert.register-alert-error
+              ul
+                each error in errors
+                  li= error
 
-      p
-        button(type='submit') Create Account
+          .register-card
+            h2 Create account
 
-  p
-    a(href='/login') Already have an account? Login
+            form(method="POST", action="/register")
+              .register-field
+                label(for="username") Username
+                .register-input-wrap
+                  span.register-input-icon 👤
+                  input#username(
+                    type="text",
+                    name="username",
+                    required,
+                    value=formData && formData.username ? formData.username : "",
+                    placeholder="Choose a username"
+                  )
+
+              .register-field
+                label(for="email") Email
+                .register-input-wrap
+                  span.register-input-icon ✉
+                  input#email(
+                    type="email",
+                    name="email",
+                    required,
+                    value=formData && formData.email ? formData.email : "",
+                    placeholder="Enter your email"
+                  )
+
+              .register-field
+                label(for="password") Password
+                .register-input-wrap
+                  span.register-input-icon 🔒
+                  input#password(
+                    type="password",
+                    name="password",
+                    required,
+                    placeholder="Create a password"
+                  )
+
+              .register-field
+                label(for="confirmPassword") Confirm Password
+                .register-input-wrap
+                  span.register-input-icon 🔒
+                  input#confirmPassword(
+                    type="password",
+                    name="confirmPassword",
+                    required,
+                    placeholder="Re-enter your password"
+                  )
+
+              .register-terms
+                input#terms(type="checkbox", name="terms", required)
+                label(for="terms")
+                  | I agree to the 
+                  a(href="/terms") Terms and Conditions
+                  |  of using MCYAM Food Exchange.
+
+              button.register-submit(type="submit") Create account
+
+          .register-secure-note
+            span.register-secure-icon 🛡
+            span Your account details are protected securely.
