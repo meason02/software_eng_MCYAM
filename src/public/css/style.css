@@ -1949,3 +1949,41 @@ main.container {
     width: 100%;
   }
 }
+
+/* Edit listing current image */
+.edit-current-image {
+  background: #F7F8FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.edit-current-image img {
+  width: 120px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #FFFFFF;
+}
+
+.edit-current-image span {
+  color: #667085;
+  font-weight: 800;
+}
+
+.my-listing-actions form {
+  margin: 0;
+}
+
+.my-listing-actions form button {
+  background: #D32F2F;
+  cursor: pointer;
+}
+
+.my-listing-actions form button:hover {
+  background: #B42318;
+}

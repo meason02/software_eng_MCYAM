@@ -59,11 +59,11 @@ block content
 
                 .my-listing-actions
                   a(href=`/listings/${listing.listing_id}`) View Details
-                  button(type='button', disabled) Edit soon
-                  button(type='button', disabled) Remove soon
+                  a(href=`/listings/${listing.listing_id}/edit`) Edit
+                  form(method='POST', action=`/listings/${listing.listing_id}/remove`, onsubmit="return confirm('Remove this listing from active listings?');")
+                    button(type='submit') Remove
       else
         .my-listings-empty
           h3 No listings in this section
           p Create a new surplus food listing or check another status tab.
           a(href='/listings/create') Create New Listing
-

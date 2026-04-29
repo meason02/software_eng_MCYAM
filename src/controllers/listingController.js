@@ -703,3 +703,289 @@ exports.getMyListings = async (req, res) => {
 
 
 
+
+exports.showEditListing = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+  const listingId = Number(req.params.id);
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  if (!Number.isInteger(listingId) || listingId < 1) {
+    return res.status(404).send('Listing not found');
+  }
+
+  try {
+    const [rows] = await db.query(`
+      SELECT
+        listing_id,
+        user_id,
+        category_id,
+        title,
+        description,
+        quantity,
+        expiry_date,
+        collection_start,
+        collection_end,
+        pickup_location,
+        status
+      FROM FOOD_LISTING
+      WHERE listing_id = ?
+    `, [listingId]);
+
+    if (rows.length === 0) {
+      return res.status(404).send('Listing not found');
+    }
+
+    const listing = rows[0];
+
+    if (listing.user_id !== currentUserId) {
+      return res.status(403).send('You are not allowed to edit this listing');
+    }
+
+    const categories = await getCategories();
+
+    return res.render('listings/edit', {
+      title: 'Edit Listing',
+      listing: {
+        ...listing,
+        image_path: getListingImagePath(listing.listing_id)
+      },
+      categories,
+      errors: [],
+      formData: listing
+    });
+  } catch (error) {
+    console.error('Edit listing form error:', error);
+    return res.status(500).send('Failed to load edit listing page');
+  }
+};
+
+exports.updateListing = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+  const listingId = Number(req.params.id);
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  if (!Number.isInteger(listingId) || listingId < 1) {
+    deleteTempUpload(req.file);
+    return res.status(404).send('Listing not found');
+  }
+
+  const categoryIdRaw = (req.body.category_id || '').trim();
+  const title = (req.body.title || '').trim();
+  const description = (req.body.description || '').trim();
+  const quantityRaw = (req.body.quantity || '').trim();
+  const expiryDate = (req.body.expiry_date || '').trim();
+  const collectionStartRaw = (req.body.collection_start || '').trim();
+  const collectionEndRaw = (req.body.collection_end || '').trim();
+  const pickupLocation = (req.body.pickup_location || '').trim();
+
+  const errors = [];
+
+  if (req.uploadError) {
+    errors.push(req.uploadError);
+  }
+
+  const categoryId = Number(categoryIdRaw);
+  const quantity = Number(quantityRaw);
+  const collectionStart = normalizeDateTimeInput(collectionStartRaw);
+  const collectionEnd = normalizeDateTimeInput(collectionEndRaw);
+
+  if (!Number.isInteger(categoryId) || categoryId < 1) {
+    errors.push('Category is required');
+  }
+
+  if (!title) {
+    errors.push('Title is required');
+  } else if (title.length > 255) {
+    errors.push('Title must be 255 characters or fewer');
+  }
+
+  if (!description) {
+    errors.push('Description is required');
+  } else if (description.length > 255) {
+    errors.push('Description must be 255 characters or fewer');
+  }
+
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    errors.push('Quantity must be a whole number greater than 0');
+  }
+
+  if (!expiryDate) {
+    errors.push('Expiry date is required');
+  }
+
+  if (!collectionStartRaw) {
+    errors.push('Collection start is required');
+  }
+
+  if (!collectionEndRaw) {
+    errors.push('Collection end is required');
+  }
+
+  if (collectionStartRaw && collectionEndRaw) {
+    const startDate = new Date(collectionStartRaw);
+    const endDate = new Date(collectionEndRaw);
+
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+      errors.push('Enter valid collection dates');
+    } else if (endDate <= startDate) {
+      errors.push('Collection end must be after collection start');
+    }
+  }
+
+  if (!pickupLocation) {
+    errors.push('Pickup location is required');
+  } else if (pickupLocation.length > 255) {
+    errors.push('Pickup location must be 255 characters or fewer');
+  }
+
+  const formData = {
+    category_id: categoryIdRaw,
+    title,
+    description,
+    quantity: quantityRaw,
+    expiry_date: expiryDate,
+    collection_start: collectionStartRaw,
+    collection_end: collectionEndRaw,
+    pickup_location: pickupLocation
+  };
+
+  const renderEditWithErrors = async (statusCode = 400) => {
+    const categories = await getCategories();
+
+    return res.status(statusCode).render('listings/edit', {
+      title: 'Edit Listing',
+      listing: {
+        listing_id: listingId,
+        image_path: getListingImagePath(listingId)
+      },
+      categories,
+      errors,
+      formData
+    });
+  };
+
+  if (errors.length > 0) {
+    deleteTempUpload(req.file);
+    return renderEditWithErrors(400);
+  }
+
+  try {
+    const [listingRows] = await db.query(
+      'SELECT listing_id, user_id FROM FOOD_LISTING WHERE listing_id = ?',
+      [listingId]
+    );
+
+    if (listingRows.length === 0) {
+      deleteTempUpload(req.file);
+      return res.status(404).send('Listing not found');
+    }
+
+    if (listingRows[0].user_id !== currentUserId) {
+      deleteTempUpload(req.file);
+      return res.status(403).send('You are not allowed to edit this listing');
+    }
+
+    const [categoryRows] = await db.query(
+      'SELECT category_id FROM CATEGORY WHERE category_id = ?',
+      [categoryId]
+    );
+
+    if (categoryRows.length === 0) {
+      deleteTempUpload(req.file);
+      errors.push('Selected category does not exist');
+      return renderEditWithErrors(400);
+    }
+
+    await db.query(`
+      UPDATE FOOD_LISTING
+      SET
+        category_id = ?,
+        title = ?,
+        description = ?,
+        quantity = ?,
+        expiry_date = ?,
+        collection_start = ?,
+        collection_end = ?,
+        pickup_location = ?
+      WHERE listing_id = ?
+        AND user_id = ?
+    `, [
+      categoryId,
+      title,
+      description,
+      quantity,
+      expiryDate,
+      collectionStart,
+      collectionEnd,
+      pickupLocation,
+      listingId,
+      currentUserId
+    ]);
+
+    if (req.file) {
+      const extension = path.extname(req.file.originalname).toLowerCase();
+      const finalPath = path.join(listingUploadDir, `listing-${listingId}${extension}`);
+
+      for (const existingExtension of ['jpg', 'jpeg', 'png', 'webp']) {
+        const existingPath = path.join(listingUploadDir, `listing-${listingId}.${existingExtension}`);
+
+        if (fs.existsSync(existingPath)) {
+          fs.unlinkSync(existingPath);
+        }
+      }
+
+      fs.renameSync(req.file.path, finalPath);
+    }
+
+    return res.redirect(`/listings/${listingId}`);
+  } catch (error) {
+    console.error('Update listing error:', error);
+    deleteTempUpload(req.file);
+    errors.push('Server error. Please try again.');
+    return renderEditWithErrors(500);
+  }
+};
+
+exports.removeListing = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+  const listingId = Number(req.params.id);
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  if (!Number.isInteger(listingId) || listingId < 1) {
+    return res.status(404).send('Listing not found');
+  }
+
+  try {
+    const [listingRows] = await db.query(
+      'SELECT listing_id, user_id FROM FOOD_LISTING WHERE listing_id = ?',
+      [listingId]
+    );
+
+    if (listingRows.length === 0) {
+      return res.status(404).send('Listing not found');
+    }
+
+    if (listingRows[0].user_id !== currentUserId) {
+      return res.status(403).send('You are not allowed to remove this listing');
+    }
+
+    await db.query(
+      "UPDATE FOOD_LISTING SET status = 'REMOVED' WHERE listing_id = ? AND user_id = ?",
+      [listingId, currentUserId]
+    );
+
+    return res.redirect('/my-listings');
+  } catch (error) {
+    console.error('Remove listing error:', error);
+    return res.status(500).send('Failed to remove listing');
+  }
+};
