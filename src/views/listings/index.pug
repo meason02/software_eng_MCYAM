@@ -1,71 +1,116 @@
-extends ../layout
+﻿extends ../layout
 
 block content
-  h1 Listings
+  - const queryText = filters && filters.q ? filters.q : ''
+  - const selectedCategory = filters && filters.category_id ? String(filters.category_id) : ''
+  - const selectedStatus = filters && filters.status ? filters.status : ''
+  - const formatDate = (value) => { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  - const formatTime = (value) => { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); }
+  - const statusLabel = (value) => value ? value.replace('_', ' ') : 'UNKNOWN'
 
-  p
-    a(href='/listings/create') Create New Listing
+  .home-feed-page
+    aside.home-filter-panel
+      h2 Filters
 
-  if errors && errors.length
-    .card
-      h3 Filter Errors
-      ul
-        each error in errors
-          li= error
+      form(method='GET', action='/listings')
+        .filter-section
+          h3 Search
+          input.filter-input(
+            type='text',
+            name='q',
+            value=queryText,
+            placeholder='Search listings...'
+          )
 
-  form(method='GET', action='/listings')
-    .card
-      p
-        label(for='q') Search
-        br
-        input#q(type='text', name='q', value=filters && filters.q ? filters.q : '', placeholder='Search title, description, or location')
+        .filter-section
+          h3 Category
+          select.filter-select(name='category_id')
+            option(value='') All categories
+            each category in categories
+              option(
+                value=category.category_id,
+                selected=selectedCategory == String(category.category_id) ? true : false
+              )= category.name
 
-      p
-        label(for='category_id') Category
-        br
-        select#category_id(name='category_id')
-          option(value='') All categories
-          each category in categories
-            option(
-              value=category.category_id,
-              selected=filters && filters.category_id == String(category.category_id) ? true : false
-            )= category.name
+        .filter-section
+          h3 Status
+          select.filter-select(name='status')
+            option(value='') All statuses
+            each optionValue in statusOptions
+              option(
+                value=optionValue,
+                selected=selectedStatus == optionValue ? true : false
+              )= statusLabel(optionValue)
 
-      p
-        label(for='status') Status
-        br
-        select#status(name='status')
-          option(value='') All statuses
-          each optionValue in statusOptions
-            option(
-              value=optionValue,
-              selected=filters && filters.status == optionValue ? true : false
-            )= optionValue
+        .filter-actions
+          button.filter-apply(type='submit') Apply Filters
+          a.filter-reset(href='/listings') Reset Filter
 
-      p
-        button(type='submit') Apply Filters
-        | 
-        a(href='/listings') Clear
+      a.create-listing-button(href='/listings/create') Create New Listing
 
-  if listings && listings.length
-    each listing in listings
-      .card
-        h3
-          a(href=`/listings/${listing.listing_id}`)= listing.title
-        p
-          strong Category:
-          |  #{listing.category_name}
-        p
-          strong Quantity:
-          |  #{listing.quantity}
-        p
-          strong Expiry Date:
-          |  #{new Date(listing.expiry_date).toDateString()}
-        p
-          strong Pickup Location:
-          |  #{listing.pickup_location}
-        p
-          strong Status:
-          |  #{listing.status}
-  else
-    p No listings found.
+    section.home-listings-area
+      .home-listings-header
+        div
+          h1 Home / Listings Feed
+          p Find surplus food near you and help reduce waste in your community.
+
+        .home-sort-box
+          label(for='sort') Sort by
+          select#sort(name='sort')
+            option(value='recent', selected=true) Recent listing
+            option(value='nearest', disabled=true) Nearest to me coming soon
+
+      if errors && errors.length
+        .feed-alert.feed-alert-error
+          ul
+            each error in errors
+              li= error
+
+      if listings && listings.length
+        .listing-results-count Showing #{listings.length} available listing#{listings.length === 1 ? '' : 's'}
+
+        .listing-card-list
+          each listing in listings
+            - const cleanStatus = String(listing.status || 'UNKNOWN').toLowerCase().replace('_', '-')
+            - const badgeClass = 'listing-status listing-status--' + cleanStatus
+            article.listing-feed-card
+              .listing-image-placeholder
+                span= listing.category_name ? listing.category_name.charAt(0).toUpperCase() : 'F'
+
+              .listing-feed-content
+                .listing-feed-top
+                  div
+                    h2
+                      a(href=`/listings/${listing.listing_id}`)= listing.title
+                    p.listing-description= listing.description || 'No description provided.'
+
+                  span(class=badgeClass)= statusLabel(listing.status)
+
+                .listing-meta-grid
+                  .listing-meta-item
+                    span.meta-icon 📦
+                    span Qty: #{listing.quantity}
+
+                  .listing-meta-item
+                    span.meta-icon 🗂
+                    span= listing.category_name
+
+                  .listing-meta-item
+                    span.meta-icon 📅
+                    span Expiry: #{formatDate(listing.expiry_date)}
+
+                  .listing-meta-item
+                    span.meta-icon 📍
+                    span= listing.pickup_location
+
+                .listing-feed-bottom
+                  span.listing-posted Posted #{formatDate(listing.create_at)}
+                  span.listing-interest #{listing.interested_count || 0} interested
+                  a.view-details-button(href=`/listings/${listing.listing_id}`) View Details
+      else
+        .empty-listings-card
+          h2 No listings found
+          p Try changing your filters or create a new surplus food listing.
+          a.view-details-button(href='/listings/create') Create Listing
+
+

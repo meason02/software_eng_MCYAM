@@ -1,4 +1,4 @@
-const db = require('../config/db');
+﻿const db = require('../config/db');
 
 const LISTING_STATUS_OPTIONS = ['AVAILABLE', 'CLAIM_PENDING', 'COMPLETED'];
 
@@ -563,3 +563,4 @@ exports.getListingById = async (req, res) => {
     return res.status(500).send('Server error');
   }
 };
+

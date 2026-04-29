@@ -1,10 +1,27 @@
-nav.navbar
-  .container
-    h1.logo Food Waste Management
-    ul.nav-links
+﻿nav.app-navbar
+  .app-navbar__inner
+    a.app-navbar__brand(href="/listings")
+      img.app-navbar__logo(src="/images/logo.png", alt="MCYAM Food Exchange logo")
+
+    ul.app-navbar__links
       li
-        a(href="/users") Users
+        a(href="/listings") Home
       li
-        a(href="/listings") Listings
+        a(href="/maps") Maps
       li
-        a(href="/categories") Categories
+        a(href="/my-claims") My Claims
+      li
+        a(href="/my-listings") My Listings
+      li
+        a(href="/notifications") Notifications
+      li
+        a(href="/users") Community
+
+    .app-navbar__profile
+      if currentUser
+        a.app-navbar__avatar(href="/profile", title="My Profile")
+          span= currentUser.username ? currentUser.username.charAt(0).toUpperCase() : 'U'
+        a.app-navbar__logout(href="/logout") Logout
+      else
+        a.app-navbar__logout(href="/login") Login
+

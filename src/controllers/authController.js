@@ -161,7 +161,7 @@ exports.login = async (req, res) => {
       role: user.role
     };
 
-    return res.redirect('/users');
+    return res.redirect('/listings');
   } catch (error) {
     console.error('Login error:', error);
     return renderLogin(
@@ -183,3 +183,4 @@ exports.logout = (req, res) => {
     return res.redirect('/login');
   });
 };
+
