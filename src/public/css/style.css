@@ -534,3 +534,239 @@ main.container {
 .home-sort-box option:disabled {
   color: #98A2B3;
 }
+
+/* Sprint 4 Community Page */
+.community-page {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.community-sidebar {
+  background: linear-gradient(180deg, #2E7D32, #176D35);
+  color: #FFFFFF;
+  border-radius: 24px;
+  padding: 30px 24px;
+  min-height: 360px;
+  position: sticky;
+  top: 110px;
+  box-shadow: 0 12px 30px rgba(46, 125, 50, 0.22);
+}
+
+.community-sidebar h1 {
+  margin: 0 0 14px;
+  font-size: 34px;
+}
+
+.community-sidebar p {
+  margin: 0 0 28px;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.6;
+}
+
+.community-sidebar-button {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.community-main {
+  min-width: 0;
+}
+
+.community-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.community-header h2 {
+  margin: 0 0 8px;
+  font-size: 34px;
+  color: #111827;
+}
+
+.community-header p {
+  margin: 0;
+  color: #667085;
+}
+
+.community-search {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.05);
+}
+
+.community-search input {
+  width: 220px;
+  height: 42px;
+  border: 1px solid #D9DEE7;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.community-search button,
+.community-search a {
+  min-height: 42px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 14px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  font-weight: 800;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.community-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.community-stat-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.05);
+}
+
+.community-stat-card span {
+  display: block;
+  color: #667085;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.community-stat-card strong {
+  color: #2E7D32;
+  font-size: 30px;
+}
+
+.community-users-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.community-user-card,
+.community-empty-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.06);
+}
+
+.community-avatar {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: #EAF7EF;
+  color: #2E7D32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.community-user-info h3 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.community-user-info p {
+  margin: 0 0 6px;
+  color: #667085;
+}
+
+.community-user-info span {
+  color: #98A2B3;
+  font-size: 14px;
+}
+
+.community-user-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.community-user-stats span {
+  background: #F7F8FA;
+  border: 1px solid #E5E7EB;
+  color: #374151;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.community-view-button {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 10px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.community-view-button:hover {
+  background: #256C2A;
+}
+
+@media (max-width: 1050px) {
+  .community-page {
+    grid-template-columns: 1fr;
+  }
+
+  .community-sidebar {
+    position: static;
+    min-height: auto;
+  }
+
+  .community-header {
+    flex-direction: column;
+  }
+
+  .community-search {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .community-search input {
+    width: 100%;
+  }
+
+  .community-stats-grid,
+  .community-users-grid {
+    grid-template-columns: 1fr;
+  }
+}

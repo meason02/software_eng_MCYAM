@@ -1,22 +1,60 @@
-extends ../layout
+﻿extends ../layout
 
 block content
-  h2 Users List
+  - const searchText = filters && filters.q ? filters.q : ''
+  - const formatDate = (value) => { if (!value) return 'Unknown'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Unknown' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
 
-  if users.length
-    each user in users
-      .card
-        h3
-          a(href=`/users/${user.user_id}`)= user.username
-        p
-          strong Email:
-          |  #{user.email}
-        p
-          strong User ID:
-          |  #{user.user_id}
-        p
-          strong Joined:
-          |  #{user.created_at}
-  else
-    .card
-      p No users found.
+  .community-page
+    aside.community-sidebar
+      h1 Community
+      p Connect with local members who share or claim surplus food in your community.
+      a.community-sidebar-button(href='/listings') Browse Listings
+
+    section.community-main
+      .community-header
+        div
+          h2 Community
+          p View registered local members and their public food-sharing activity.
+
+        form.community-search(method='GET', action='/users')
+          input(type='text', name='q', value=searchText, placeholder='Search users')
+          button(type='submit') Search
+          if searchText
+            a(href='/users') Clear
+
+      .community-stats-grid
+        .community-stat-card
+          span Total Members
+          strong= stats && stats.total_members ? stats.total_members : 0
+
+        .community-stat-card
+          span Listings Shared
+          strong= stats && stats.listings_shared ? stats.listings_shared : 0
+
+        .community-stat-card
+          span Claims Made
+          strong= stats && stats.claims_made ? stats.claims_made : 0
+
+        .community-stat-card
+          span Total Food Shared
+          strong= stats && stats.total_food_shared ? stats.total_food_shared : 0
+
+      if users && users.length
+        .community-users-grid
+          each user in users
+            .community-user-card
+              .community-avatar= user.username ? user.username.charAt(0).toUpperCase() : 'U'
+              .community-user-info
+                h3= user.username
+                p Private community profile
+                span Joined #{formatDate(user.created_at)}
+
+              .community-user-stats
+                span #{user.listings_shared || 0} listings shared
+                span #{user.claims_made || 0} claims made
+
+              a.community-view-button(href=`/users/${user.user_id}`) View Profile
+      else
+        .community-empty-card
+          h3 No community members found
+          p Try searching another username.
