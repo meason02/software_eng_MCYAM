@@ -1,0 +1,86 @@
+﻿extends ../layout
+
+block content
+  - const formatDateTime = (value) => {
+  -   if (!value) return 'Not set';
+  -   const date = new Date(value);
+  -   return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  - }
+  - const statusLabel = (value) => value ? String(value).replace('_', ' ') : 'UNKNOWN'
+
+  .notifications-page
+    .notifications-hero
+      div
+        span.notifications-label Claim Centre
+        h1 Notifications
+        p Track incoming claim requests for your listings and updates on the food items you claimed.
+      a.notifications-primary-link(href='/listings') Browse Listings
+
+    .notifications-grid
+      section.notifications-panel
+        .notifications-panel-header
+          h2 Incoming Requests
+          p Claims submitted by other community members for your listings.
+
+        if incomingRequests && incomingRequests.length
+          .notification-list
+            each item in incomingRequests
+              - const cleanStatus = String(item.claim_status || 'UNKNOWN').toLowerCase().replace('_', '-')
+              article.notification-card
+                .notification-image
+                  if item.image_path
+                    img(src=item.image_path, alt=item.title)
+                  else
+                    span= item.title ? item.title.charAt(0).toUpperCase() : 'F'
+
+                .notification-content
+                  .notification-top
+                    h3= item.title
+                    span(class=`notification-status notification-status--${cleanStatus}`)= statusLabel(item.claim_status)
+
+                  p
+                    strong= item.claimant_username
+                    |  requested this listing.
+
+                  span.notification-time Claimed: #{formatDateTime(item.called_at)}
+
+                  .notification-actions
+                    a(href=`/listings/${item.listing_id}`) Review Request
+        else
+          .notification-empty
+            h3 No incoming requests
+            p When someone claims your food listing, it will appear here.
+
+      section.notifications-panel
+        .notifications-panel-header
+          h2 My Claim Updates
+          p Updates on food items that you have requested from others.
+
+        if outgoingUpdates && outgoingUpdates.length
+          .notification-list
+            each item in outgoingUpdates
+              - const cleanStatus = String(item.claim_status || 'UNKNOWN').toLowerCase().replace('_', '-')
+              article.notification-card
+                .notification-image
+                  if item.image_path
+                    img(src=item.image_path, alt=item.title)
+                  else
+                    span= item.title ? item.title.charAt(0).toUpperCase() : 'F'
+
+                .notification-content
+                  .notification-top
+                    h3= item.title
+                    span(class=`notification-status notification-status--${cleanStatus}`)= statusLabel(item.claim_status)
+
+                  p
+                    | Owner: 
+                    strong= item.owner_username
+
+                  span.notification-time Claimed: #{formatDateTime(item.called_at)}
+
+                  .notification-actions
+                    a(href=`/listings/${item.listing_id}`) View Claim
+        else
+          .notification-empty
+            h3 No claim updates
+            p When you claim a listing, updates will appear here.

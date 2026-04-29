@@ -1096,3 +1096,56 @@ exports.getMyClaims = async (req, res) => {
 
 
 
+
+exports.getNotifications = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  try {
+    const [incomingRequests] = await db.query(`
+      SELECT
+        cl.claims_id,
+        cl.status AS claim_status,
+        cl.called_at,
+        fl.listing_id,
+        fl.title,
+        fl.expiry_date,
+        claimant.username AS claimant_username
+      FROM CLAIM cl
+      JOIN FOOD_LISTING fl ON cl.listing_id = fl.listing_id
+      JOIN USER claimant ON cl.user_id = claimant.user_id
+      WHERE fl.user_id = ?
+      ORDER BY cl.called_at DESC, cl.claims_id DESC
+      LIMIT 20
+    `, [currentUserId]);
+
+    const [outgoingUpdates] = await db.query(`
+      SELECT
+        cl.claims_id,
+        cl.status AS claim_status,
+        cl.called_at,
+        fl.listing_id,
+        fl.title,
+        fl.expiry_date,
+        owner.username AS owner_username
+      FROM CLAIM cl
+      JOIN FOOD_LISTING fl ON cl.listing_id = fl.listing_id
+      JOIN USER owner ON fl.user_id = owner.user_id
+      WHERE cl.user_id = ?
+      ORDER BY cl.called_at DESC, cl.claims_id DESC
+      LIMIT 20
+    `, [currentUserId]);
+
+    return res.render('notifications/index', {
+      title: 'Notifications',
+      incomingRequests: attachListingImages(incomingRequests),
+      outgoingUpdates: attachListingImages(outgoingUpdates)
+    });
+  } catch (error) {
+    console.error('Notifications error:', error);
+    return res.status(500).send('Failed to load notifications');
+  }
+};
