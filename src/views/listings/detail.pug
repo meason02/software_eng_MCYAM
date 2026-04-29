@@ -1,7 +1,14 @@
-extends ../layout
+﻿extends ../layout
 
 block content
   h1= listing.title
+
+  if listing.image_path
+    .listing-detail-image-card
+      img.listing-detail-image(src=listing.image_path, alt=listing.title)
+  else
+    .listing-detail-image-card.listing-detail-image-card--empty
+      span No image uploaded for this listing yet
 
   if claimFeedback
     .card
@@ -95,3 +102,4 @@ block content
 
   p
     a(href='/listings') Back to Listings
+

@@ -75,7 +75,10 @@ block content
             - const badgeClass = 'listing-status listing-status--' + cleanStatus
             article.listing-feed-card
               .listing-image-placeholder
-                span= listing.category_name ? listing.category_name.charAt(0).toUpperCase() : 'F'
+                if listing.image_path
+                  img.listing-card-image(src=listing.image_path, alt=listing.title)
+                else
+                  span= listing.category_name ? listing.category_name.charAt(0).toUpperCase() : 'F'
 
               .listing-feed-content
                 .listing-feed-top
@@ -112,5 +115,6 @@ block content
           h2 No listings found
           p Try changing your filters or create a new surplus food listing.
           a.view-details-button(href='/listings/create') Create Listing
+
 
 

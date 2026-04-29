@@ -1,0 +1,69 @@
+﻿extends ../layout
+
+block content
+  - const formatDate = (value) => { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  - const statusLabel = (value) => value ? String(value).replace('_', ' ') : 'UNKNOWN'
+  - const activeCount = counts && counts.active_count ? counts.active_count : 0
+  - const pendingCount = counts && counts.pending_count ? counts.pending_count : 0
+  - const completedCount = counts && counts.completed_count ? counts.completed_count : 0
+  - const expiredCount = counts && counts.expired_count ? counts.expired_count : 0
+
+  .my-listings-page
+    aside.my-listings-sidebar
+      h1 Welcome!
+      p Manage the surplus food listings you have shared with the local community.
+      a.my-listings-create-button(href='/listings/create') Create New Listing
+
+    section.my-listings-main
+      .my-listings-header
+        div
+          h2 My Listings
+          p Only listings created by your logged-in account are shown here.
+
+        a.my-listings-header-button(href='/listings/create') Create New Listing
+
+      .my-listings-tabs
+        a(class=selectedTab === 'active' ? 'my-tab my-tab--active' : 'my-tab', href='/my-listings?tab=active') Active
+          span= activeCount
+        a(class=selectedTab === 'pending' ? 'my-tab my-tab--active' : 'my-tab', href='/my-listings?tab=pending') Pending
+          span= pendingCount
+        a(class=selectedTab === 'completed' ? 'my-tab my-tab--active' : 'my-tab', href='/my-listings?tab=completed') Completed
+          span= completedCount
+        a(class=selectedTab === 'expired' ? 'my-tab my-tab--active' : 'my-tab', href='/my-listings?tab=expired') Expired
+          span= expiredCount
+
+      if listings && listings.length
+        .my-listings-grid
+          each listing in listings
+            - const cleanStatus = String(listing.status || 'UNKNOWN').toLowerCase().replace('_', '-')
+            article.my-listing-card
+              .my-listing-image
+                if listing.image_path
+                  img.my-listing-card-image(src=listing.image_path, alt=listing.title)
+                else
+                  span= listing.category_name ? listing.category_name.charAt(0).toUpperCase() : 'F'
+
+              .my-listing-content
+                .my-listing-top
+                  div
+                    h3= listing.title
+                    p= listing.description || 'No description provided.'
+                  span(class=`my-listing-status my-listing-status--${cleanStatus}`)= statusLabel(listing.status)
+
+                .my-listing-details
+                  span 📦 Quantity: #{listing.quantity}
+                  span 🗂 Category: #{listing.category_name}
+                  span 📅 Expiry: #{formatDate(listing.expiry_date)}
+                  span 📍 #{listing.pickup_location}
+                  span 👥 Claims: #{listing.claim_count || 0}
+
+                .my-listing-actions
+                  a(href=`/listings/${listing.listing_id}`) View Details
+                  button(type='button', disabled) Edit soon
+                  button(type='button', disabled) Remove soon
+      else
+        .my-listings-empty
+          h3 No listings in this section
+          p Create a new surplus food listing or check another status tab.
+          a(href='/listings/create') Create New Listing
+

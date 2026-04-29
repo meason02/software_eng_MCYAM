@@ -1,4 +1,36 @@
-﻿const db = require('../config/db');
+﻿const fs = require('fs');
+const path = require('path');
+const db = require('../config/db');
+
+const listingUploadDir = path.join(__dirname, '..', 'public', 'uploads', 'listings');
+fs.mkdirSync(listingUploadDir, { recursive: true });
+
+const getListingImagePath = (listingId) => {
+  const extensions = ['jpg', 'jpeg', 'png', 'webp'];
+
+  for (const extension of extensions) {
+    const imageFile = path.join(listingUploadDir, `listing-${listingId}.${extension}`);
+
+    if (fs.existsSync(imageFile)) {
+      return `/uploads/listings/listing-${listingId}.${extension}`;
+    }
+  }
+
+  return null;
+};
+
+const attachListingImages = (listings = []) => {
+  return listings.map((listing) => ({
+    ...listing,
+    image_path: getListingImagePath(listing.listing_id)
+  }));
+};
+
+const deleteTempUpload = (file) => {
+  if (file && file.path) {
+    fs.unlink(file.path, () => {});
+  }
+};
 
 const LISTING_STATUS_OPTIONS = ['AVAILABLE', 'CLAIM_PENDING', 'COMPLETED'];
 
@@ -144,7 +176,7 @@ exports.getAllListings = async (req, res) => {
 
     return res.render('listings/index', {
       title: 'Listings',
-      listings,
+      listings: attachListingImages(listings),
       categories,
       filters: { q, status, category_id: categoryIdRaw },
       errors: [],
@@ -176,6 +208,11 @@ exports.createListing = async (req, res) => {
   const pickupLocation = (req.body.pickup_location || '').trim();
 
   const errors = [];
+
+  if (req.uploadError) {
+    errors.push(req.uploadError);
+  }
+
   const categoryId = Number(categoryIdRaw);
   const quantity = Number(quantityRaw);
   const collectionStart = normalizeDateTimeInput(collectionStartRaw);
@@ -242,6 +279,7 @@ exports.createListing = async (req, res) => {
   };
 
   if (errors.length > 0) {
+    deleteTempUpload(req.file);
     return renderCreateListing(res, formData, errors, 400);
   }
 
@@ -252,6 +290,7 @@ exports.createListing = async (req, res) => {
     );
 
     if (categoryRows.length === 0) {
+      deleteTempUpload(req.file);
       return renderCreateListing(
         res,
         formData,
@@ -287,9 +326,16 @@ exports.createListing = async (req, res) => {
       'AVAILABLE'
     ]);
 
+    if (req.file) {
+      const extension = path.extname(req.file.originalname).toLowerCase();
+      const finalPath = path.join(listingUploadDir, `listing-${result.insertId}${extension}`);
+      fs.renameSync(req.file.path, finalPath);
+    }
+
     return res.redirect(`/listings/${result.insertId}`);
   } catch (error) {
     console.error('Create listing error:', error);
+    deleteTempUpload(req.file);
     return renderCreateListing(
       res,
       formData,
@@ -547,7 +593,7 @@ exports.getListingById = async (req, res) => {
 
     return res.render('listings/detail', {
       title: rows[0].title,
-      listing: rows[0],
+      listing: { ...rows[0], image_path: getListingImagePath(rows[0].listing_id) },
       claimState: {
         activeClaim,
         canClaim: currentUserId !== null && !isOwner && rows[0].status === 'AVAILABLE' && !activeClaim,
@@ -563,4 +609,97 @@ exports.getListingById = async (req, res) => {
     return res.status(500).send('Server error');
   }
 };
+
+
+exports.getMyListings = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+  const tab = (req.query.tab || 'active').trim().toLowerCase();
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  const validTabs = ['active', 'pending', 'completed', 'expired'];
+  const selectedTab = validTabs.includes(tab) ? tab : 'active';
+
+  const conditions = ['fl.user_id = ?'];
+  const params = [currentUserId];
+
+  if (selectedTab === 'active') {
+    conditions.push("fl.status = 'AVAILABLE'");
+    conditions.push('(fl.expiry_date IS NULL OR fl.expiry_date >= CURDATE())');
+  }
+
+  if (selectedTab === 'pending') {
+    conditions.push("fl.status = 'CLAIM_PENDING'");
+  }
+
+  if (selectedTab === 'completed') {
+    conditions.push("fl.status = 'COMPLETED'");
+  }
+
+  if (selectedTab === 'expired') {
+    conditions.push("fl.expiry_date < CURDATE()");
+    conditions.push("fl.status <> 'COMPLETED'");
+  }
+
+  try {
+    const [countRows] = await db.query(`
+      SELECT
+        SUM(CASE WHEN status = 'AVAILABLE' AND (expiry_date IS NULL OR expiry_date >= CURDATE()) THEN 1 ELSE 0 END) AS active_count,
+        SUM(CASE WHEN status = 'CLAIM_PENDING' THEN 1 ELSE 0 END) AS pending_count,
+        SUM(CASE WHEN status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_count,
+        SUM(CASE WHEN expiry_date < CURDATE() AND status <> 'COMPLETED' THEN 1 ELSE 0 END) AS expired_count
+      FROM FOOD_LISTING
+      WHERE user_id = ?
+    `, [currentUserId]);
+
+    const [listings] = await db.query(`
+      SELECT
+        fl.listing_id,
+        fl.title,
+        fl.description,
+        fl.quantity,
+        fl.expiry_date,
+        fl.collection_start,
+        fl.collection_end,
+        fl.pickup_location,
+        fl.status,
+        fl.create_at,
+        c.name AS category_name,
+        COALESCE(COUNT(cl.claims_id), 0) AS claim_count
+      FROM FOOD_LISTING fl
+      JOIN CATEGORY c ON fl.category_id = c.category_id
+      LEFT JOIN CLAIM cl ON cl.listing_id = fl.listing_id
+      WHERE ${conditions.join(' AND ')}
+      GROUP BY
+        fl.listing_id,
+        fl.title,
+        fl.description,
+        fl.quantity,
+        fl.expiry_date,
+        fl.collection_start,
+        fl.collection_end,
+        fl.pickup_location,
+        fl.status,
+        fl.create_at,
+        c.name
+      ORDER BY fl.create_at DESC, fl.listing_id DESC
+    `, params);
+
+    return res.render('listings/my-listings', {
+      title: 'My Listings',
+      listings: attachListingImages(listings),
+      selectedTab,
+      counts: countRows[0] || {}
+    });
+  } catch (error) {
+    console.error('My listings error:', error);
+    return res.status(500).send('Failed to load my listings');
+  }
+};
+
+
+
+
 

@@ -985,3 +985,663 @@ main.container {
     grid-template-columns: 1fr;
   }
 }
+
+/* Sprint 4 My Listings Page */
+.my-listings-page {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.my-listings-sidebar {
+  background: linear-gradient(180deg, #2E7D32, #176D35);
+  color: #FFFFFF;
+  border-radius: 24px;
+  padding: 30px 24px;
+  min-height: 360px;
+  position: sticky;
+  top: 110px;
+  box-shadow: 0 12px 30px rgba(46, 125, 50, 0.22);
+}
+
+.my-listings-sidebar h1 {
+  margin: 0 0 14px;
+  font-size: 34px;
+}
+
+.my-listings-sidebar p {
+  margin: 0 0 28px;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.6;
+}
+
+.my-listings-create-button,
+.my-listings-header-button,
+.my-listings-empty a {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 12px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-listings-create-button {
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: transparent;
+}
+
+.my-listings-main {
+  min-width: 0;
+}
+
+.my-listings-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.my-listings-header h2 {
+  margin: 0 0 8px;
+  font-size: 34px;
+  color: #111827;
+}
+
+.my-listings-header p {
+  margin: 0;
+  color: #667085;
+}
+
+.my-listings-tabs {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.05);
+}
+
+.my-tab {
+  flex: 1;
+  min-height: 46px;
+  border-radius: 12px;
+  color: #667085;
+  text-decoration: none;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.my-tab span {
+  min-width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #F7F8FA;
+  color: #667085;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.my-tab--active {
+  background: #EAF7EF;
+  color: #2E7D32;
+}
+
+.my-tab--active span {
+  background: #2E7D32;
+  color: #FFFFFF;
+}
+
+.my-listings-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.my-listing-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 22px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 18px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.06);
+}
+
+.my-listing-image {
+  min-height: 130px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #EAF7EF, #D7F0DF);
+  color: #2E7D32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 54px;
+  font-weight: 900;
+}
+
+.my-listing-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.my-listing-top h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  color: #111827;
+}
+
+.my-listing-top p {
+  margin: 0;
+  color: #667085;
+  line-height: 1.5;
+}
+
+.my-listing-status {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.my-listing-status--available {
+  background: #2E7D32;
+}
+
+.my-listing-status--claim-pending {
+  background: #F9A825;
+  color: #111827;
+}
+
+.my-listing-status--completed {
+  background: #1565C0;
+}
+
+.my-listing-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin: 16px 0;
+  color: #374151;
+  font-size: 14px;
+}
+
+.my-listing-actions {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.my-listing-actions a,
+.my-listing-actions button {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 0;
+  background: #2E7D32;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-listing-actions button:disabled {
+  background: #E5E7EB;
+  color: #667085;
+  cursor: not-allowed;
+}
+
+.my-listings-empty {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 22px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.06);
+}
+
+.my-listings-empty h3 {
+  margin: 0 0 8px;
+}
+
+.my-listings-empty p {
+  color: #667085;
+  margin: 0 0 20px;
+}
+
+@media (max-width: 980px) {
+  .my-listings-page {
+    grid-template-columns: 1fr;
+  }
+
+  .my-listings-sidebar {
+    position: static;
+    min-height: auto;
+  }
+
+  .my-listings-header,
+  .my-listing-top {
+    flex-direction: column;
+  }
+
+  .my-listings-tabs {
+    flex-direction: column;
+  }
+
+  .my-listing-card {
+    grid-template-columns: 1fr;
+  }
+
+  .my-listing-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sprint 4 Create Listing Page */
+.create-listing-page {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 30px;
+  align-items: stretch;
+}
+
+.create-listing-sidebar {
+  min-height: calc(100vh - 170px);
+}
+
+.create-back-link {
+  display: inline-flex;
+  margin-bottom: 16px;
+  color: #374151;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.create-sidebar-card {
+  min-height: 620px;
+  background: linear-gradient(180deg, #2E7D32, #176D35);
+  color: #FFFFFF;
+  border-radius: 0 0 120px 0;
+  padding: 48px 34px;
+  box-shadow: 0 12px 30px rgba(46, 125, 50, 0.22);
+}
+
+.create-sidebar-card h1 {
+  margin: 0 0 26px;
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+.create-sidebar-card p {
+  margin: 0 0 34px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.create-sidebar-button {
+  width: 180px;
+  min-height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-listing-main {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 24px;
+  padding: 34px 40px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.06);
+}
+
+.create-listing-header {
+  margin-bottom: 24px;
+}
+
+.create-listing-header h1 {
+  margin: 0 0 8px;
+  font-size: 36px;
+  color: #111827;
+}
+
+.create-listing-header p {
+  margin: 0;
+  color: #667085;
+  font-size: 16px;
+}
+
+.create-alert {
+  background: #FDECEC;
+  border: 1px solid rgba(211, 47, 47, 0.18);
+  color: #D32F2F;
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 22px;
+}
+
+.create-alert h3 {
+  margin: 0 0 8px;
+}
+
+.create-alert ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.create-listing-form {
+  display: grid;
+  gap: 18px;
+}
+
+.create-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.create-field label {
+  display: block;
+  margin-bottom: 9px;
+  color: #111827;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.create-field input,
+.create-field select,
+.create-field textarea {
+  width: 100%;
+  border: 1px solid #D9DEE7;
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: #111827;
+  font-size: 15px;
+  padding: 0 16px;
+  outline: none;
+}
+
+.create-field input,
+.create-field select {
+  height: 54px;
+}
+
+.create-field textarea {
+  min-height: 110px;
+  resize: vertical;
+  padding-top: 14px;
+  line-height: 1.5;
+}
+
+.create-field input:focus,
+.create-field select:focus,
+.create-field textarea:focus {
+  border-color: #2E7D32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+.create-upload-box {
+  min-height: 170px;
+  border: 2px dashed #C8D0DC;
+  border-radius: 16px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-align: center;
+  color: #667085;
+}
+
+.create-upload-icon {
+  font-size: 34px;
+  color: #2E7D32;
+}
+
+.create-upload-box p {
+  margin: 0;
+  color: #667085;
+}
+
+.create-upload-box span {
+  font-size: 13px;
+  color: #98A2B3;
+}
+
+.create-upload-box button {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  font-weight: 900;
+  cursor: not-allowed;
+}
+
+.create-submit-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.create-cancel-link,
+.create-submit-button {
+  min-height: 54px;
+  padding: 0 28px;
+  border-radius: 12px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-cancel-link {
+  background: #FFFFFF;
+  border: 1px solid #D9DEE7;
+  color: #2E7D32;
+  text-decoration: none;
+}
+
+.create-submit-button {
+  min-width: 260px;
+  border: 0;
+  background: #2E7D32;
+  color: #FFFFFF;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.create-submit-button:hover {
+  background: #256C2A;
+}
+
+@media (max-width: 980px) {
+  .create-listing-page {
+    grid-template-columns: 1fr;
+  }
+
+  .create-sidebar-card {
+    min-height: auto;
+    border-radius: 24px;
+  }
+
+  .create-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .create-submit-row {
+    flex-direction: column;
+  }
+
+  .create-submit-button,
+  .create-cancel-link {
+    width: 100%;
+  }
+}
+
+/* Create listing real file upload */
+.create-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.create-upload-box {
+  cursor: pointer;
+}
+
+.create-upload-button {
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-upload-box:hover {
+  border-color: #2E7D32;
+  background: #F7FBF8;
+}
+
+/* Fix create listing upload box alignment */
+.create-upload-box {
+  min-height: 190px;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  text-align: center !important;
+}
+
+.create-upload-box p {
+  margin: 0 !important;
+  font-size: 16px;
+  font-weight: 800;
+  color: #667085;
+}
+
+.create-upload-box span {
+  display: block !important;
+  font-size: 14px;
+  color: #98A2B3;
+}
+
+.create-upload-button {
+  margin-top: 4px;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 10px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Create listing selected image preview */
+.create-upload-preview {
+  display: none;
+  width: 180px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #D9DEE7;
+  margin-bottom: 6px;
+}
+
+/* Listing detail image display */
+.listing-detail-image-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 22px;
+  padding: 16px;
+  margin: 18px 0;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.06);
+}
+
+.listing-detail-image {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+}
+
+.listing-detail-image-card--empty {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667085;
+  font-weight: 800;
+  background: #F7F8FA;
+}
+
+/* Fix listing detail image so full uploaded image is visible */
+.listing-detail-image-card {
+  background: #FFFFFF !important;
+}
+
+.listing-detail-image {
+  width: 100% !important;
+  max-height: 520px !important;
+  object-fit: contain !important;
+  background: #F7F8FA !important;
+  border-radius: 18px !important;
+}
+
+/* Listing card uploaded image display */
+.listing-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
+
+/* My listings uploaded image display */
+.my-listing-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}

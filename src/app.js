@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -7,6 +7,7 @@ const usersRoutes = require('./routes/users');
 const categoryRoutes = require('./routes/categories');
 const listingsRoutes = require('./routes/listings');
 const authRoutes = require('./routes/auth');
+const listingController = require('./controllers/listingController');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', authRoutes);
+app.get('/my-listings', requireLogin, listingController.getMyListings);
 app.use('/users', requireLogin, usersRoutes);
 app.use('/listings', requireLogin, listingsRoutes);
 app.use('/categories', requireLogin, categoryRoutes);
@@ -48,3 +50,4 @@ app.use('/categories', requireLogin, categoryRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+

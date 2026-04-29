@@ -1,65 +1,146 @@
-extends ../layout
+﻿extends ../layout
 
 block content
-  h1 Create Listing
+  - const form = formData || {}
 
-  if errors && errors.length
-    .card
-      h3 Validation Errors
-      ul
-        each error in errors
-          li= error
+  .create-listing-page
+    aside.create-listing-sidebar
+      a.create-back-link(href='/my-listings') ← My Listings
 
-  form(method='POST', action='/listings/create')
-    .card
-      p
-        label(for='category_id') Category
-        br
-        select#category_id(name='category_id', required)
-          option(value='') Select a category
-          each category in categories
-            option(
-              value=category.category_id,
-              selected=formData && formData.category_id == String(category.category_id) ? true : false
-            )= category.name
+      .create-sidebar-card
+        h1 Want to share surplus food?
+        p Fill out the details of your available food so we can create a listing to help reduce food waste.
+        a.create-sidebar-button(href='/my-listings') My Listings
 
-      p
-        label(for='title') Title
-        br
-        input#title(type='text', name='title', required, value=formData && formData.title ? formData.title : '')
+    section.create-listing-main
+      .create-listing-header
+        h1 Create Listing
+        p Add clear food details so other community members know what is available.
 
-      p
-        label(for='description') Description
-        br
-        input#description(type='text', name='description', required, value=formData && formData.description ? formData.description : '')
+      if errors && errors.length
+        .create-alert
+          h3 Please fix the following:
+          ul
+            each error in errors
+              li= error
 
-      p
-        label(for='quantity') Quantity
-        br
-        input#quantity(type='number', name='quantity', min='1', required, value=formData && formData.quantity ? formData.quantity : '')
+      form.create-listing-form(method='POST', action='/listings/create', enctype='multipart/form-data')
+        .create-field
+          label(for='title') Listing Title
+          input#title(
+            type='text',
+            name='title',
+            required,
+            value=form.title ? form.title : '',
+            placeholder='e.g. Fresh Sourdough Bread'
+          )
 
-      p
-        label(for='expiry_date') Expiry Date
-        br
-        input#expiry_date(type='date', name='expiry_date', required, value=formData && formData.expiry_date ? formData.expiry_date : '')
+        .create-field
+          label(for='listing_image') Upload Image
+          input#createListingImage.create-file-input(
+            type='file',
+            name='listing_image',
+            accept='image/jpeg,image/png,image/webp'
+          )
+          label.create-upload-box(for='createListingImage')
+            img#createImagePreview.create-upload-preview(src='', alt='Selected food image preview')
+            .create-upload-icon#createUploadIcon 🖼
+            p#createUploadText Click here to browse and upload a food image
+            span#createUploadHelp JPG, PNG or WEBP only. Maximum file size: 5MB.
+            .create-upload-button Browse Files
 
-      p
-        label(for='collection_start') Collection Start
-        br
-        input#collection_start(type='datetime-local', name='collection_start', required, value=formData && formData.collection_start ? formData.collection_start : '')
+        .create-form-row
+          .create-field
+            label(for='category_id') Category
+            select#category_id(name='category_id', required)
+              option(value='') Select Category
+              each category in categories
+                option(
+                  value=category.category_id,
+                  selected=form.category_id == String(category.category_id) ? true : false
+                )= category.name
 
-      p
-        label(for='collection_end') Collection End
-        br
-        input#collection_end(type='datetime-local', name='collection_end', required, value=formData && formData.collection_end ? formData.collection_end : '')
+          .create-field
+            label(for='quantity') Serving Size
+            input#quantity(
+              type='number',
+              name='quantity',
+              min='1',
+              required,
+              value=form.quantity ? form.quantity : '',
+              placeholder='e.g. 4 portions'
+            )
 
-      p
-        label(for='pickup_location') Pickup Location
-        br
-        input#pickup_location(type='text', name='pickup_location', required, value=formData && formData.pickup_location ? formData.pickup_location : '')
+        .create-form-row
+          .create-field
+            label(for='collection_start') Pickup Start
+            input#collection_start(
+              type='datetime-local',
+              name='collection_start',
+              required,
+              value=form.collection_start ? form.collection_start : ''
+            )
 
-      p
-        button(type='submit') Create Listing
+          .create-field
+            label(for='collection_end') Pickup End
+            input#collection_end(
+              type='datetime-local',
+              name='collection_end',
+              required,
+              value=form.collection_end ? form.collection_end : ''
+            )
 
-  p
-    a(href='/listings') Back to Listings
+        .create-field
+          label(for='pickup_location') Location
+          input#pickup_location(
+            type='text',
+            name='pickup_location',
+            required,
+            value=form.pickup_location ? form.pickup_location : '',
+            placeholder='Enter a location e.g. suburb, street address'
+          )
+
+        .create-field
+          label(for='description') Additional Details
+          textarea#description(
+            name='description',
+            required,
+            maxlength='255',
+            placeholder='Provide any additional information about the food e.g. ingredients, storage instructions, allergens'
+          )= form.description ? form.description : ''
+
+        .create-field
+          label(for='expiry_date') Expiration Date
+          input#expiry_date(
+            type='date',
+            name='expiry_date',
+            required,
+            value=form.expiry_date ? form.expiry_date : ''
+          )
+
+        .create-submit-row
+          a.create-cancel-link(href='/my-listings') Cancel
+          button.create-submit-button(type='submit') Create Listing
+
+  script.
+    const imageInput = document.getElementById('createListingImage');
+    const imagePreview = document.getElementById('createImagePreview');
+    const uploadIcon = document.getElementById('createUploadIcon');
+    const uploadText = document.getElementById('createUploadText');
+    const uploadHelp = document.getElementById('createUploadHelp');
+
+    if (imageInput) {
+      imageInput.addEventListener('change', function () {
+        const file = this.files && this.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        imagePreview.src = URL.createObjectURL(file);
+        imagePreview.style.display = 'block';
+        uploadIcon.style.display = 'none';
+        uploadText.textContent = file.name;
+        uploadHelp.textContent = 'Image selected. Click again to change it.';
+      });
+    }
