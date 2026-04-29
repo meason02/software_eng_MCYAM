@@ -1149,3 +1149,81 @@ exports.getNotifications = async (req, res) => {
     return res.status(500).send('Failed to load notifications');
   }
 };
+
+exports.getMapsPage = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  const pickupPoints = [
+    {
+      name: 'University of Roehampton Main Campus',
+      address: 'Grove House, Roehampton Lane, London, SW15 5PJ',
+      area: 'Roehampton',
+      lat: 51.4563401,
+      lng: -0.2446496
+    },
+    {
+      name: 'Putney Library',
+      address: '5/7 Disraeli Road, London, SW15 2DR',
+      area: 'Putney',
+      lat: 51.46179264557399,
+      lng: -0.21594818765003937
+    },
+    {
+      name: 'Barnes Station',
+      address: 'Station Road, Barnes, Greater London, SW13 0HT',
+      area: 'Barnes',
+      lat: 51.467085,
+      lng: -0.242164
+    },
+    {
+      name: 'Southfields Library',
+      address: '300 Wimbledon Park Road, London, SW19 6NL',
+      area: 'Southfields',
+      lat: 51.44355,
+      lng: -0.20871
+    },
+    {
+      name: 'Wandsworth Town Hall',
+      address: 'Wandsworth High Street, London, SW18 2PU',
+      area: 'Wandsworth',
+      lat: 51.4573837328,
+      lng: -0.190861499201
+    }
+  ];
+
+  try {
+    const [listings] = await db.query(`
+      SELECT
+        fl.listing_id,
+        fl.title,
+        fl.description,
+        fl.quantity,
+        fl.expiry_date,
+        fl.pickup_location,
+        fl.status,
+        c.name AS category_name,
+        u.username AS owner_username
+      FROM FOOD_LISTING fl
+      JOIN CATEGORY c ON fl.category_id = c.category_id
+      JOIN USER u ON fl.user_id = u.user_id
+      WHERE fl.status = 'AVAILABLE'
+        AND (fl.expiry_date IS NULL OR fl.expiry_date >= CURDATE())
+      ORDER BY fl.expiry_date ASC, fl.listing_id DESC
+      LIMIT 30
+    `);
+
+    return res.render('maps/index', {
+      title: 'Maps',
+      pickupPoints,
+      listings: attachListingImages(listings)
+    });
+  } catch (error) {
+    console.error('Maps page error:', error);
+    return res.status(500).send('Failed to load maps page');
+  }
+};
+

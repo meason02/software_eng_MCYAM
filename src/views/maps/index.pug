@@ -1,0 +1,207 @@
+﻿extends ../layout
+
+block content
+  link(rel='stylesheet', href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css')
+
+  - const formatDate = function(value) { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  - const formatTime = function(value) { if (!value) return ''; const date = new Date(value); return Number.isNaN(date.getTime()) ? '' : date.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }); }
+  - const mapsSearch = function(value) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(value || ''); }
+  - const featuredListing = listings && listings.length ? listings[0] : null
+
+  .maps-shell-v2
+    aside.maps-sidebar-v2
+      .maps-sidebar-v2__top
+        .maps-sidebar-v2__icon 📍
+        h2 Maps
+        .maps-sidebar-v2__divider
+        p View available food listings and approved pickup points across your local community.
+
+      .maps-sidebar-v2__section
+        h3 Legend
+        ul.maps-legend
+          li
+            span.maps-legend__dot.maps-legend__dot--pickup
+            span Approved pickup point
+          li
+            span.maps-legend__dot.maps-legend__dot--listing
+            span Available listing
+
+      .maps-sidebar-v2__radius
+        span Community radius:
+        strong max 10 miles
+
+    section.maps-content-v2
+      .maps-header-v2
+        h1 Maps
+        p Browse available food listings and approved pickup points around University of Roehampton.
+
+      .maps-toolbar-v2
+        .maps-toolbar-v2__item
+          span.maps-toolbar-v2__icon 🏛
+          span Centre:
+          strong University of Roehampton
+
+        .maps-toolbar-v2__item
+          span.maps-toolbar-v2__icon ⦿
+          span Radius:
+          strong 10 miles
+
+        .maps-toolbar-v2__item
+          .maps-toolbar-v2__toggle
+          span Approved Pickup Points
+
+        .maps-toolbar-v2__item
+          .maps-toolbar-v2__toggle
+          span Available Listings
+
+        .maps-toolbar-v2__item.maps-toolbar-v2__item--muted
+          span.maps-toolbar-v2__icon ⓘ
+          span No live tracking used
+
+      .maps-map-card-v2
+        #mcyamLeafletMap.maps-leaflet-map-v2
+
+      .maps-section-v2
+        .maps-section-v2__head
+          h2 Approved Pickup Points
+          span.maps-section-v2__count= pickupPoints.length
+
+        .maps-points-grid-v2
+          each point, index in pickupPoints
+            .maps-point-card-v2
+              .maps-point-card-v2__number= index + 1
+              h3= point.name
+              p= point.address
+              a(href=mapsSearch(point.address), target='_blank', rel='noopener') Open in Google Maps
+
+      .maps-section-v2
+        .maps-section-v2__head
+          h2 Available Listings Nearby
+          span.maps-section-v2__count= listings && listings.length ? listings.length : 0
+
+        if listings && listings.length
+          .maps-listings-grid-v2
+            each listing in listings
+              .maps-listing-card-v2
+                .maps-listing-card-v2__image
+                  if listing.image_path
+                    img(src=listing.image_path, alt=listing.title)
+                  else
+                    span= listing.category_name ? listing.category_name.charAt(0).toUpperCase() : 'F'
+
+                .maps-listing-card-v2__body
+                  .maps-listing-card-v2__top
+                    h3= listing.title
+                    span.maps-status-badge-v2 Available
+
+                  p.maps-listing-card-v2__address
+                    | #{listing.pickup_location || 'Pickup location not set'}
+
+                  if listing.collection_start || listing.collection_end
+                    p.maps-listing-card-v2__time
+                      span ⏰
+                      |  #{formatTime(listing.collection_start) || 'Time not set'}
+                      if listing.collection_end
+                        |  - #{formatTime(listing.collection_end)}
+
+                  .maps-listing-card-v2__actions
+                    a(href=`/listings/${listing.listing_id}`) View Details
+                    a(href=mapsSearch(listing.pickup_location), target='_blank', rel='noopener') Open in Google Maps
+        else
+          .maps-empty-card-v2
+            h3 No available listings
+            p Available, non-expired listings will appear here.
+
+  script(src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js')
+  script.
+    window.MCYAM_PICKUP_POINTS = !{JSON.stringify(pickupPoints)};
+    window.MCYAM_LISTINGS = !{JSON.stringify(listings || [])};
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const centre = [51.4563401, -0.2446496];
+      const pickupPoints = window.MCYAM_PICKUP_POINTS || [];
+      const listings = window.MCYAM_LISTINGS || [];
+
+      const map = L.map('mcyamLeafletMap', {
+        scrollWheelZoom: true
+      }).setView(centre, 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      L.circle(centre, {
+        radius: 16093,
+        color: '#2E7D32',
+        weight: 2,
+        fillColor: '#2E7D32',
+        fillOpacity: 0.10
+      }).addTo(map);
+
+      const pickupIcon = function (number) {
+        return L.divIcon({
+          className: 'mcyam-leaflet-marker mcyam-leaflet-marker--pickup',
+          html: '<span>' + number + '</span>',
+          iconSize: [36, 36],
+          iconAnchor: [18, 36],
+          popupAnchor: [0, -36]
+        });
+      };
+
+      const listingIcon = L.divIcon({
+        className: 'mcyam-leaflet-marker mcyam-leaflet-marker--listing',
+        html: '<span>🍃</span>',
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -34]
+      });
+
+      pickupPoints.forEach(function (point, index) {
+        L.marker([point.lat, point.lng], {
+          icon: pickupIcon(index + 1)
+        })
+          .addTo(map)
+          .bindPopup(
+            '<strong>' + point.name + '</strong><br>' +
+            point.address + '<br><br>' +
+            '<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(point.address) + '">Open in Google Maps</a>'
+          );
+      });
+
+      function findPickupForListing(location) {
+        const cleanLocation = String(location || '').toLowerCase();
+
+        return pickupPoints.find(function (point) {
+          return cleanLocation.includes(point.name.toLowerCase()) ||
+            cleanLocation.includes(point.address.toLowerCase()) ||
+            cleanLocation.includes(point.area.toLowerCase()) ||
+            cleanLocation.includes(point.address.split(',').pop().trim().toLowerCase());
+        });
+      }
+
+      listings.forEach(function (listing, index) {
+        const matchedPoint = findPickupForListing(listing.pickup_location);
+        const fallbackPoint = pickupPoints[index % pickupPoints.length];
+
+        if (!matchedPoint && !fallbackPoint) {
+          return;
+        }
+
+        const basePoint = matchedPoint || fallbackPoint;
+        const offset = matchedPoint ? 0 : ((index % 5) - 2) * 0.0014;
+        const lat = Number(basePoint.lat) + offset;
+        const lng = Number(basePoint.lng) + offset;
+
+        L.marker([lat, lng], {
+          icon: listingIcon
+        })
+          .addTo(map)
+          .bindPopup(
+            '<strong>' + listing.title + '</strong><br>' +
+            '<span>' + (listing.category_name || 'Food listing') + '</span><br>' +
+            '<span>' + (listing.pickup_location || 'Pickup location not set') + '</span><br><br>' +
+            '<a href="/listings/' + listing.listing_id + '">View Details</a>'
+          );
+      });
+    });
