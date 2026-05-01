@@ -113,7 +113,7 @@ src/views
 - random users cannot rate someone else's completed claim
 - same claim cannot be rated twice
 
-Expected outcome:
+Expected outcome, which has been:
 Claim request → Confirm claim → Complete claim → Rate completed claim
 
 ### Other Tasks
