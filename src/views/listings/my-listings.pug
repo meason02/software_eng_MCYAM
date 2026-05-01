@@ -60,10 +60,64 @@ block content
                 .my-listing-actions
                   a(href=`/listings/${listing.listing_id}`) View Details
                   a(href=`/listings/${listing.listing_id}/edit`) Edit
-                  form(method='POST', action=`/listings/${listing.listing_id}/remove`, onsubmit="return confirm('Remove this listing from active listings?');")
-                    button(type='submit') Remove
+                  form.my-remove-form(method='POST', action=`/listings/${listing.listing_id}/remove`)
+                    button.my-remove-trigger(type='button', data-listing-title=listing.title) Remove
       else
         .my-listings-empty
           h3 No listings in this section
           p Create a new surplus food listing or check another status tab.
           a(href='/listings/create') Create New Listing
+
+  .remove-modal#removeListingModal(aria-hidden='true')
+    .remove-modal__backdrop
+    .remove-modal__box
+      h2 Remove this listing?
+      p#removeModalText This will hide the listing from public users. You can still keep it as part of your listing records.
+      .remove-modal__actions
+        button.remove-modal__cancel#cancelRemoveListing(type='button') Cancel
+        button.remove-modal__confirm#confirmRemoveListing(type='button') Remove Listing
+
+  script.
+    const removeModal = document.getElementById('removeListingModal');
+    const removeModalText = document.getElementById('removeModalText');
+    const cancelRemoveButton = document.getElementById('cancelRemoveListing');
+    const confirmRemoveButton = document.getElementById('confirmRemoveListing');
+    let selectedRemoveForm = null;
+
+    document.querySelectorAll('.my-remove-trigger').forEach(function (button) {
+      button.addEventListener('click', function () {
+        selectedRemoveForm = button.closest('form');
+        const listingTitle = button.getAttribute('data-listing-title') || 'this listing';
+
+        removeModalText.textContent = 'This will hide "' + listingTitle + '" from public users. You can still keep it as part of your listing records.';
+        removeModal.classList.add('remove-modal--open');
+        removeModal.setAttribute('aria-hidden', 'false');
+      });
+    });
+
+    if (cancelRemoveButton) {
+      cancelRemoveButton.addEventListener('click', function () {
+        selectedRemoveForm = null;
+        removeModal.classList.remove('remove-modal--open');
+        removeModal.setAttribute('aria-hidden', 'true');
+      });
+    }
+
+    if (confirmRemoveButton) {
+      confirmRemoveButton.addEventListener('click', function () {
+        if (selectedRemoveForm) {
+          selectedRemoveForm.submit();
+        }
+      });
+    }
+
+    if (removeModal) {
+      removeModal.addEventListener('click', function (event) {
+        if (event.target.classList.contains('remove-modal__backdrop')) {
+          selectedRemoveForm = null;
+          removeModal.classList.remove('remove-modal--open');
+          removeModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+

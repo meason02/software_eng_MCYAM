@@ -3762,3 +3762,75 @@ main.container {
 .maps-toolbar-v2__item--link:focus strong {
   text-decoration: underline;
 }
+
+/* Custom remove listing confirmation modal */
+.remove-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+}
+
+.remove-modal--open {
+  display: block;
+}
+
+.remove-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+}
+
+.remove-modal__box {
+  position: relative;
+  width: min(92%, 460px);
+  margin: 12vh auto 0;
+  background: #FFFFFF;
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: 0 24px 60px rgba(17, 24, 39, 0.28);
+}
+
+.remove-modal__box h2 {
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 26px;
+}
+
+.remove-modal__box p {
+  margin: 0 0 22px;
+  color: #667085;
+  line-height: 1.55;
+}
+
+.remove-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.remove-modal__cancel,
+.remove-modal__confirm {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  border: 0;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.remove-modal__cancel {
+  background: #F7F8FA;
+  color: #374151;
+  border: 1px solid #D9DEE7;
+}
+
+.remove-modal__confirm {
+  background: #D32F2F;
+  color: #FFFFFF;
+}
+
+.remove-modal__confirm:hover {
+  background: #B42318;
+}
