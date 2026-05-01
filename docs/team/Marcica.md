@@ -117,3 +117,5 @@ src/views
 
 Expected outcome:
 Claim request → Confirm claim → Complete claim → Rate completed claim
+
+### Other Tasks:
