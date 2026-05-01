@@ -99,7 +99,7 @@ My Sprint 4 task was to connect the existing claim flow to the rating system. Th
 - Make sure claim actions and rating actions do not conflict.
 - Test the full flow end to end: `confirm → complete → rate`.
 
-* First, I checked the existing project structure to see whether rating files already existed. *
+* First, I checked the existing project structure to see whether rating files already existed. 
 
 Files checked:
 src/controllers
