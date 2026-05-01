@@ -98,3 +98,12 @@ My Sprint 4 task was to connect the existing claim flow to the rating system. Th
 - Prevent ratings on `PENDING`, `REJECTED`, or `CONFIRMED` claims.
 - Make sure claim actions and rating actions do not conflict.
 - Test the full flow end to end: `confirm → complete → rate`.
+
+First, I checked the existing project structure to see whether rating files already existed.
+
+Files checked:
+
+```text
+src/controllers
+src/routes
+src/views
