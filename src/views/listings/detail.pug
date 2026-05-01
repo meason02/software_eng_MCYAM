@@ -5,6 +5,8 @@ block content
   - const formatDateTime = (value) => { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
   - const statusLabel = (value) => value ? String(value).replace('_', ' ') : 'UNKNOWN'
   - const cleanStatus = String(listing.status || 'UNKNOWN').toLowerCase().replace('_', '-')
+  - const reportSuccess = typeof query !== 'undefined' && query.report_success
+  - const reportError = typeof query !== 'undefined' && query.report_error
 
   .listing-detail-page
     .listing-detail-topbar
@@ -31,7 +33,25 @@ block content
             span Shared by
             strong= listing.owner_username
 
+        if claimState && !claimState.isOwner
+          button.detail-report-button#openReportModal(type='button') Report listing issue
+
         .detail-action-card
+          if reportSuccess
+            .detail-feedback.detail-feedback--success
+              strong Report Submitted
+              p Thank you. Your report has been sent to the listing owner.
+
+          if reportError
+            .detail-feedback.detail-feedback--error
+              strong Report Error
+              if reportError === 'own_listing'
+                p You cannot report your own listing.
+              else if reportError === 'reason_required'
+                p Please choose a reason before submitting a report.
+              else
+                p Report could not be submitted. Please try again.
+
           if claimFeedback
             .detail-feedback(class=claimFeedback.type === 'success' ? 'detail-feedback--success' : 'detail-feedback--error')
               strong= claimFeedback.type === 'success' ? 'Claim Update' : 'Claim Error'
@@ -108,3 +128,57 @@ block content
       .listing-detail-tags
         h2 Tags
         p= listing.tags
+
+  if claimState && !claimState.isOwner
+    .report-modal#reportListingModal(aria-hidden='true')
+      .report-modal__backdrop
+      .report-modal__box
+        h2 Report listing issue
+        p Tell the owner what problem you noticed with this listing.
+
+        form(method='POST', action=`/listings/${listing.listing_id}/report`)
+          .report-field
+            label(for='report_reason') Reason
+            select#report_reason(name='report_reason', required)
+              option(value='') Select a reason
+              option(value='Incorrect listing information') Incorrect listing information
+              option(value='Food appears unsafe or expired') Food appears unsafe or expired
+              option(value='Pickup details are unclear') Pickup details are unclear
+              option(value='Duplicate or misleading listing') Duplicate or misleading listing
+              option(value='Other issue') Other issue
+
+          .report-field
+            label(for='report_details') Extra details
+            textarea#report_details(name='report_details', maxlength='180', placeholder='Briefly explain the issue')
+
+          .report-modal__actions
+            button.report-modal__cancel#cancelReportListing(type='button') Cancel
+            button.report-modal__submit(type='submit') Submit Report
+
+  script.
+    const reportModal = document.getElementById('reportListingModal');
+    const openReportButton = document.getElementById('openReportModal');
+    const cancelReportButton = document.getElementById('cancelReportListing');
+
+    if (openReportButton && reportModal) {
+      openReportButton.addEventListener('click', function () {
+        reportModal.classList.add('report-modal--open');
+        reportModal.setAttribute('aria-hidden', 'false');
+      });
+    }
+
+    if (cancelReportButton && reportModal) {
+      cancelReportButton.addEventListener('click', function () {
+        reportModal.classList.remove('report-modal--open');
+        reportModal.setAttribute('aria-hidden', 'true');
+      });
+    }
+
+    if (reportModal) {
+      reportModal.addEventListener('click', function (event) {
+        if (event.target.classList.contains('report-modal__backdrop')) {
+          reportModal.classList.remove('report-modal--open');
+          reportModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }

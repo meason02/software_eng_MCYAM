@@ -1105,44 +1105,257 @@ exports.getNotifications = async (req, res) => {
   }
 
   try {
-    const [incomingRequests] = await db.query(`
+    const [ownedListings] = await db.query(`
+      SELECT
+        listing_id,
+        title,
+        status,
+        quantity,
+        expiry_date,
+        collection_start,
+        collection_end,
+        pickup_location,
+        create_at
+      FROM FOOD_LISTING
+      WHERE user_id = ?
+      ORDER BY create_at DESC, listing_id DESC
+      LIMIT 20
+    `, [currentUserId]);
+
+    const [incomingClaims] = await db.query(`
       SELECT
         cl.claims_id,
         cl.status AS claim_status,
         cl.called_at,
         fl.listing_id,
         fl.title,
+        fl.quantity,
+        fl.status AS listing_status,
         fl.expiry_date,
+        fl.collection_start,
+        fl.collection_end,
+        fl.pickup_location,
         claimant.username AS claimant_username
       FROM CLAIM cl
       JOIN FOOD_LISTING fl ON cl.listing_id = fl.listing_id
       JOIN USER claimant ON cl.user_id = claimant.user_id
       WHERE fl.user_id = ?
       ORDER BY cl.called_at DESC, cl.claims_id DESC
-      LIMIT 20
+      LIMIT 30
     `, [currentUserId]);
 
-    const [outgoingUpdates] = await db.query(`
+    const [outgoingClaims] = await db.query(`
       SELECT
         cl.claims_id,
         cl.status AS claim_status,
         cl.called_at,
         fl.listing_id,
         fl.title,
+        fl.quantity,
+        fl.status AS listing_status,
         fl.expiry_date,
+        fl.collection_start,
+        fl.collection_end,
+        fl.pickup_location,
         owner.username AS owner_username
       FROM CLAIM cl
       JOIN FOOD_LISTING fl ON cl.listing_id = fl.listing_id
       JOIN USER owner ON fl.user_id = owner.user_id
       WHERE cl.user_id = ?
       ORDER BY cl.called_at DESC, cl.claims_id DESC
-      LIMIT 20
+      LIMIT 30
     `, [currentUserId]);
+
+    const [listingReports] = await db.query(`
+      SELECT
+        r.report_id,
+        r.reason,
+        r.status AS report_status,
+        r.created_at,
+        fl.listing_id,
+        fl.title,
+        reporter.username AS reporter_username
+      FROM REPORT r
+      JOIN FOOD_LISTING fl ON r.listing_id = fl.listing_id
+      JOIN USER reporter ON r.user_id = reporter.user_id
+      WHERE fl.user_id = ?
+      ORDER BY r.created_at DESC, r.report_id DESC
+      LIMIT 30
+    `, [currentUserId]);
+
+    const today = new Date(new Date().toDateString());
+    const notifications = [];
+
+    ownedListings.forEach((listing) => {
+      const expiryDate = listing.expiry_date ? new Date(listing.expiry_date) : null;
+      const isExpired = expiryDate && expiryDate < today;
+
+      if (listing.status === 'REMOVED') {
+        notifications.push({
+          type: 'listing_removed',
+          icon: '✕',
+          tone: 'danger',
+          title: 'Listing removed',
+          message: `Your listing "${listing.title}" was removed from public listings.`,
+          time: listing.create_at,
+          listing_id: listing.listing_id,
+          actionLabel: 'View Listing',
+          actionUrl: `/listings/${listing.listing_id}`,
+          isUnread: true
+        });
+      } else if (listing.status === 'COMPLETED') {
+        notifications.push({
+          type: 'listing_completed',
+          icon: '✓',
+          tone: 'success',
+          title: 'Listing completed',
+          message: `"${listing.title}" was marked as collected successfully.`,
+          time: listing.create_at,
+          listing_id: listing.listing_id,
+          actionLabel: 'View Summary',
+          actionUrl: `/listings/${listing.listing_id}`,
+          isUnread: true
+        });
+      } else if (isExpired) {
+        notifications.push({
+          type: 'listing_expired',
+          icon: '!',
+          tone: 'warning',
+          title: 'Listing expired',
+          message: `"${listing.title}" has expired and is no longer shown publicly.`,
+          time: listing.expiry_date,
+          listing_id: listing.listing_id,
+          actionLabel: 'View Listing',
+          actionUrl: `/listings/${listing.listing_id}`,
+          isUnread: true
+        });
+      } else {
+        notifications.push({
+          type: 'listing_created',
+          icon: '✓',
+          tone: 'success',
+          title: 'Listing created',
+          message: `Your new listing "${listing.title}" was created successfully.`,
+          time: listing.create_at,
+          listing_id: listing.listing_id,
+          actionLabel: 'View Listing',
+          actionUrl: `/listings/${listing.listing_id}`,
+          isUnread: true
+        });
+      }
+    });
+
+    incomingClaims.forEach((claim) => {
+      if (claim.claim_status === 'PENDING') {
+        notifications.push({
+          type: 'claim_request',
+          icon: '👤',
+          tone: 'request',
+          title: 'Collection request received',
+          message: `${claim.claimant_username} has requested to collect your "${claim.title}".`,
+          subMessage: `Qty: ${claim.quantity} • ${claim.pickup_location}`,
+          time: claim.called_at,
+          listing_id: claim.listing_id,
+          claims_id: claim.claims_id,
+          actionType: 'owner_decision',
+          isUnread: true
+        });
+      } else {
+        notifications.push({
+          type: 'track_listing',
+          icon: '↗',
+          tone: 'info',
+          title: 'Track your listing',
+          message: `"${claim.title}" claim status is now ${String(claim.claim_status).toLowerCase()}.`,
+          time: claim.called_at,
+          listing_id: claim.listing_id,
+          actionLabel: 'Track Listing',
+          actionUrl: `/listings/${claim.listing_id}`,
+          isUnread: true
+        });
+      }
+    });
+
+    listingReports.forEach((report) => {
+      notifications.push({
+        type: 'report_submitted',
+        icon: '!',
+        tone: 'warning',
+        title: 'Report submitted',
+        message: `${report.reporter_username} reported your listing "${report.title}".`,
+        subMessage: report.reason,
+        time: report.created_at,
+        listing_id: report.listing_id,
+        report_id: report.report_id,
+        actionLabel: 'View Report',
+        actionUrl: `/listings/${report.listing_id}`,
+        isUnread: true
+      });
+    });
+
+    outgoingClaims.forEach((claim) => {
+      if (claim.claim_status === 'CONFIRMED') {
+        notifications.push({
+          type: 'claim_confirmed',
+          icon: '✓',
+          tone: 'success',
+          title: 'Claim confirmed',
+          message: `Your request for "${claim.title}" has been accepted.`,
+          subMessage: `${claim.pickup_location}`,
+          time: claim.called_at,
+          listing_id: claim.listing_id,
+          actionLabel: 'View Pickup Details',
+          actionUrl: `/listings/${claim.listing_id}`,
+          isUnread: true
+        });
+      } else if (claim.claim_status === 'REJECTED') {
+        notifications.push({
+          type: 'claim_rejected',
+          icon: '✕',
+          tone: 'danger',
+          title: 'Claim rejected',
+          message: `Your request for "${claim.title}" was declined.`,
+          time: claim.called_at,
+          listing_id: claim.listing_id,
+          actionLabel: 'Browse Alternatives',
+          actionUrl: '/listings',
+          isUnread: true
+        });
+      } else if (claim.claim_status === 'COMPLETED') {
+        notifications.push({
+          type: 'claim_completed',
+          icon: '✓',
+          tone: 'success',
+          title: 'Collection completed',
+          message: `"${claim.title}" was marked as collected successfully.`,
+          time: claim.called_at,
+          listing_id: claim.listing_id,
+          actionLabel: 'View Summary',
+          actionUrl: `/listings/${claim.listing_id}`,
+          isUnread: true
+        });
+      } else {
+        notifications.push({
+          type: 'track_claim',
+          icon: '⏱',
+          tone: 'info',
+          title: 'Claim pending',
+          message: `Your request for "${claim.title}" is waiting for the owner to respond.`,
+          time: claim.called_at,
+          listing_id: claim.listing_id,
+          actionLabel: 'Track Claim',
+          actionUrl: `/listings/${claim.listing_id}`,
+          isUnread: true
+        });
+      }
+    });
+
+    notifications.sort((a, b) => new Date(b.time || 0) - new Date(a.time || 0));
 
     return res.render('notifications/index', {
       title: 'Notifications',
-      incomingRequests: attachListingImages(incomingRequests),
-      outgoingUpdates: attachListingImages(outgoingUpdates)
+      notifications: notifications.slice(0, 40),
+      unreadCount: notifications.length
     });
   } catch (error) {
     console.error('Notifications error:', error);
@@ -1224,6 +1437,56 @@ exports.getMapsPage = async (req, res) => {
   } catch (error) {
     console.error('Maps page error:', error);
     return res.status(500).send('Failed to load maps page');
+  }
+};
+
+
+
+exports.reportListing = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+  const listingId = Number(req.params.id);
+  const reportReason = (req.body.report_reason || '').trim();
+  const reportDetails = (req.body.report_details || '').trim();
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  if (!Number.isInteger(listingId) || listingId < 1) {
+    return res.status(404).send('Listing not found');
+  }
+
+  if (!reportReason) {
+    return res.redirect(`/listings/${listingId}?report_error=reason_required`);
+  }
+
+  try {
+    const [listingRows] = await db.query(
+      'SELECT listing_id, user_id FROM FOOD_LISTING WHERE listing_id = ?',
+      [listingId]
+    );
+
+    if (listingRows.length === 0) {
+      return res.status(404).send('Listing not found');
+    }
+
+    if (listingRows[0].user_id === currentUserId) {
+      return res.redirect(`/listings/${listingId}?report_error=own_listing`);
+    }
+
+    const fullReason = reportDetails
+      ? `${reportReason}: ${reportDetails}`
+      : reportReason;
+
+    await db.query(
+      'INSERT INTO REPORT (user_id, listing_id, reason, created_at, status) VALUES (?, ?, ?, NOW(), ?)',
+      [currentUserId, listingId, fullReason, 'SUBMITTED']
+    );
+
+    return res.redirect(`/listings/${listingId}?report_success=1`);
+  } catch (error) {
+    console.error('Report listing error:', error);
+    return res.redirect(`/listings/${listingId}?report_error=server_error`);
   }
 };
 

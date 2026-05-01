@@ -51,9 +51,11 @@ router.get('/:id/edit', listingController.showEditListing);
 router.post('/:id/edit', handleListingImageUpload, listingController.updateListing);
 router.post('/:id/remove', listingController.removeListing);
 
+router.post('/:id/report', listingController.reportListing);
 router.post('/:id/claim', listingController.createClaim);
 router.post('/:id/claim/:claimId/status', listingController.updateClaimStatus);
 router.get('/', listingController.getAllListings);
 router.get('/:id', listingController.getListingById);
 
 module.exports = router;
+
