@@ -85,3 +85,7 @@ Actions:
 - Restarted the app with `docker compose restart web` to verify updates.
 
 ## Sprint 4 Tasks Implementation: Claim-to-Rating Flow Connection
+
+### Assigned Feature
+
+My Sprint 4 task is to connect the existing claim flow to the rating system. The rating option should only become available after a claim has been fully completed. This makes sure that users can only rate a real completed collection and not a pending, rejected, or unfinished claim.
