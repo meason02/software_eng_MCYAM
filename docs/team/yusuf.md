@@ -1,4 +1,4 @@
-# Yusuf – Sprint 3 Progress Report
+## Yusuf – Sprint 3 Progress Report
 
 ## Date
 21 March 2026
