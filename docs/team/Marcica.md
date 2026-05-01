@@ -120,3 +120,4 @@ Claim request → Confirm claim → Complete claim → Rate completed claim
 
 ### Other Tasks
 - Task Board managing
+- Creating user stories
