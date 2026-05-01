@@ -83,3 +83,5 @@ Actions:
 - Tested the full flow: claim → confirm/reject → complete.
 - Synced changes using Git (`git add`, `git commit`, `git push`).
 - Restarted the app with `docker compose restart web` to verify updates.
+
+## Sprint 4 Tasks Implementation:
