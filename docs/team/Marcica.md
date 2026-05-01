@@ -107,3 +107,10 @@ Files checked:
 src/controllers
 src/routes
 src/views
+
+- rating button does not show for PENDING claims
+- rating button does not show for CONFIRMED claims
+- rating button does not show for REJECTED claims
+- owner cannot rate their own listing
+- random users cannot rate someone else's completed claim
+- same claim cannot be rated twice
