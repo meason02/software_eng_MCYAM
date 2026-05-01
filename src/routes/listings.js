@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
@@ -54,8 +54,10 @@ router.post('/:id/remove', listingController.removeListing);
 router.post('/:id/report', listingController.reportListing);
 router.post('/:id/claim', listingController.createClaim);
 router.post('/:id/claim/:claimId/status', listingController.updateClaimStatus);
+router.get('/claims/:claimId/track', listingController.getClaimTracking);
 router.get('/', listingController.getAllListings);
 router.get('/:id', listingController.getListingById);
 
 module.exports = router;
+
 

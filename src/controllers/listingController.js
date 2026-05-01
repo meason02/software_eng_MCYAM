@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 const db = require('../config/db');
 
@@ -1193,7 +1193,7 @@ exports.getNotifications = async (req, res) => {
       if (listing.status === 'REMOVED') {
         notifications.push({
           type: 'listing_removed',
-          icon: '✕',
+          icon: '?',
           tone: 'danger',
           title: 'Listing removed',
           message: `Your listing "${listing.title}" was removed from public listings.`,
@@ -1206,7 +1206,7 @@ exports.getNotifications = async (req, res) => {
       } else if (listing.status === 'COMPLETED') {
         notifications.push({
           type: 'listing_completed',
-          icon: '✓',
+          icon: '?',
           tone: 'success',
           title: 'Listing completed',
           message: `"${listing.title}" was marked as collected successfully.`,
@@ -1232,7 +1232,7 @@ exports.getNotifications = async (req, res) => {
       } else {
         notifications.push({
           type: 'listing_created',
-          icon: '✓',
+          icon: '?',
           tone: 'success',
           title: 'Listing created',
           message: `Your new listing "${listing.title}" was created successfully.`,
@@ -1249,11 +1249,11 @@ exports.getNotifications = async (req, res) => {
       if (claim.claim_status === 'PENDING') {
         notifications.push({
           type: 'claim_request',
-          icon: '👤',
+          icon: '??',
           tone: 'request',
           title: 'Collection request received',
           message: `${claim.claimant_username} has requested to collect your "${claim.title}".`,
-          subMessage: `Qty: ${claim.quantity} • ${claim.pickup_location}`,
+          subMessage: `Qty: ${claim.quantity} � ${claim.pickup_location}`,
           time: claim.called_at,
           listing_id: claim.listing_id,
           claims_id: claim.claims_id,
@@ -1263,14 +1263,14 @@ exports.getNotifications = async (req, res) => {
       } else {
         notifications.push({
           type: 'track_listing',
-          icon: '↗',
+          icon: '?',
           tone: 'info',
           title: 'Track your listing',
           message: `"${claim.title}" claim status is now ${String(claim.claim_status).toLowerCase()}.`,
           time: claim.called_at,
           listing_id: claim.listing_id,
           actionLabel: 'Track Listing',
-          actionUrl: `/listings/${claim.listing_id}`,
+          actionUrl: `/listings/claims/${claim.claims_id}/track`,
           isUnread: true
         });
       }
@@ -1297,7 +1297,7 @@ exports.getNotifications = async (req, res) => {
       if (claim.claim_status === 'CONFIRMED') {
         notifications.push({
           type: 'claim_confirmed',
-          icon: '✓',
+          icon: '?',
           tone: 'success',
           title: 'Claim confirmed',
           message: `Your request for "${claim.title}" has been accepted.`,
@@ -1305,13 +1305,13 @@ exports.getNotifications = async (req, res) => {
           time: claim.called_at,
           listing_id: claim.listing_id,
           actionLabel: 'View Pickup Details',
-          actionUrl: `/listings/${claim.listing_id}`,
+          actionUrl: `/listings/claims/${claim.claims_id}/track`,
           isUnread: true
         });
       } else if (claim.claim_status === 'REJECTED') {
         notifications.push({
           type: 'claim_rejected',
-          icon: '✕',
+          icon: '?',
           tone: 'danger',
           title: 'Claim rejected',
           message: `Your request for "${claim.title}" was declined.`,
@@ -1324,27 +1324,27 @@ exports.getNotifications = async (req, res) => {
       } else if (claim.claim_status === 'COMPLETED') {
         notifications.push({
           type: 'claim_completed',
-          icon: '✓',
+          icon: '?',
           tone: 'success',
           title: 'Collection completed',
           message: `"${claim.title}" was marked as collected successfully.`,
           time: claim.called_at,
           listing_id: claim.listing_id,
           actionLabel: 'View Summary',
-          actionUrl: `/listings/${claim.listing_id}`,
+          actionUrl: `/listings/claims/${claim.claims_id}/track`,
           isUnread: true
         });
       } else {
         notifications.push({
           type: 'track_claim',
-          icon: '⏱',
+          icon: '?',
           tone: 'info',
           title: 'Claim pending',
           message: `Your request for "${claim.title}" is waiting for the owner to respond.`,
           time: claim.called_at,
           listing_id: claim.listing_id,
           actionLabel: 'Track Claim',
-          actionUrl: `/listings/${claim.listing_id}`,
+          actionUrl: `/listings/claims/${claim.claims_id}/track`,
           isUnread: true
         });
       }
@@ -1489,4 +1489,71 @@ exports.reportListing = async (req, res) => {
     return res.redirect(`/listings/${listingId}?report_error=server_error`);
   }
 };
+
+
+exports.getClaimTracking = async (req, res) => {
+  const currentUserId = req.session?.user?.user_id;
+  const claimId = Number(req.params.claimId);
+
+  if (!currentUserId) {
+    return res.redirect('/login');
+  }
+
+  if (!Number.isInteger(claimId) || claimId < 1) {
+    return res.status(404).send('Claim not found');
+  }
+
+  try {
+    const [rows] = await db.query(`
+      SELECT
+        cl.claims_id,
+        cl.user_id AS claimant_id,
+        cl.status AS claim_status,
+        cl.called_at,
+        fl.listing_id,
+        fl.user_id AS owner_id,
+        fl.title,
+        fl.description,
+        fl.quantity,
+        fl.expiry_date,
+        fl.collection_start,
+        fl.collection_end,
+        fl.pickup_location,
+        fl.status AS listing_status,
+        c.name AS category_name,
+        owner.username AS owner_username,
+        claimant.username AS claimant_username
+      FROM CLAIM cl
+      JOIN FOOD_LISTING fl ON cl.listing_id = fl.listing_id
+      JOIN CATEGORY c ON fl.category_id = c.category_id
+      JOIN USER owner ON fl.user_id = owner.user_id
+      JOIN USER claimant ON cl.user_id = claimant.user_id
+      WHERE cl.claims_id = ?
+      LIMIT 1
+    `, [claimId]);
+
+    if (rows.length === 0) {
+      return res.status(404).send('Claim not found');
+    }
+
+    const claim = rows[0];
+    const canView = claim.claimant_id === currentUserId || claim.owner_id === currentUserId;
+
+    if (!canView) {
+      return res.status(403).send('You are not allowed to view this claim');
+    }
+
+    return res.render('claims/track', {
+      title: 'Track Claim',
+      claim: {
+        ...claim,
+        image_path: getListingImagePath(claim.listing_id)
+      }
+    });
+  } catch (error) {
+    console.error('Track claim error:', error);
+    return res.status(500).send('Failed to load claim tracking page');
+  }
+};
+
 

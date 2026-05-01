@@ -1,0 +1,127 @@
+﻿extends ../layout
+
+block content
+  - const formatDate = function(value) { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  - const formatDateTime = function(value) { if (!value) return 'Not set'; const date = new Date(value); return Number.isNaN(date.getTime()) ? 'Not set' : date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+  - const claimStatus = String(claim.claim_status || 'PENDING').toUpperCase()
+  - const isRejected = claimStatus === 'REJECTED'
+  - const isConfirmed = claimStatus === 'CONFIRMED' || claimStatus === 'COMPLETED'
+  - const isCompleted = claimStatus === 'COMPLETED'
+
+  .track-claim-page
+    .track-claim-hero
+      .track-claim-image
+        if claim.image_path
+          img(src=claim.image_path, alt=claim.title)
+        else
+          span= claim.category_name ? claim.category_name.charAt(0).toUpperCase() : 'F'
+
+      .track-claim-heading
+        span.track-claim-label Claim Tracking
+        h1= claim.title
+        p Track the progress of this collection request from pending to completion.
+
+      .track-claim-actions
+        a(href=`/listings/${claim.listing_id}`) View Listing
+        a(href='/my-claims') My Claims
+
+    .track-claim-progress-card
+      h2 Claim progress
+
+      if isRejected
+        .track-flow.track-flow--rejected
+          .track-step.track-step--done
+            .track-step-dot 1
+            h3 Pending
+            p Request submitted.
+          .track-step-line
+          .track-step.track-step--rejected
+            .track-step-dot ✕
+            h3 Rejected
+            p The owner declined this request.
+      else
+        .track-flow
+          .track-step.track-step--done
+            .track-step-dot 1
+            h3 Pending
+            p Request submitted.
+
+          .track-step-line(class=isConfirmed ? 'track-step-line--done' : '')
+
+          .track-step(class=isConfirmed ? 'track-step--done' : 'track-step--waiting')
+            .track-step-dot 2
+            h3 Confirmed
+            p Owner accepted the request.
+
+          .track-step-line(class=isCompleted ? 'track-step-line--done' : '')
+
+          .track-step(class=isCompleted ? 'track-step--done' : 'track-step--waiting')
+            .track-step-dot 3
+            h3 Completed
+            p Food collected successfully.
+
+    .track-claim-info-grid
+      .track-info-card
+        span Current Claim Status
+        strong= claimStatus.replace('_', ' ')
+
+      .track-info-card
+        span Listing Status
+        strong= claim.listing_status
+
+      .track-info-card
+        span Claimant
+        strong= claim.claimant_username
+
+      .track-info-card
+        span Owner
+        strong= claim.owner_username
+
+      .track-info-card
+        span Quantity
+        strong= claim.quantity
+
+      .track-info-card
+        span Category
+        strong= claim.category_name
+
+      .track-info-card
+        span Pickup Location
+        strong= claim.pickup_location
+
+      .track-info-card
+        span Requested At
+        strong= formatDateTime(claim.called_at)
+
+      .track-info-card
+        span Collection Start
+        strong= formatDateTime(claim.collection_start)
+
+      .track-info-card
+        span Collection End
+        strong= formatDateTime(claim.collection_end)
+
+      .track-info-card
+        span Expiry Date
+        strong= formatDate(claim.expiry_date)
+
+    if isRejected
+      .track-claim-next-step.track-claim-next-step--rejected
+        h2 Request declined
+        p This claim was rejected. You can browse other available listings.
+        a(href='/listings') Browse Alternatives
+    else if isCompleted
+      .track-claim-next-step
+        h2 Collection completed
+        p This claim has been marked as collected.
+        a(href=`/listings/${claim.listing_id}`) View Summary
+    else if isConfirmed
+      .track-claim-next-step
+        h2 Pickup confirmed
+        p Use the pickup location and collection time to collect the food item.
+        a(href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(claim.pickup_location || '')}`, target='_blank', rel='noopener') Open Pickup Location
+    else
+      .track-claim-next-step
+        h2 Waiting for owner response
+        p The listing owner still needs to accept or decline this claim request.
+        a(href='/notifications') View Notifications

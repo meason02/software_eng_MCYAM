@@ -4264,3 +4264,240 @@ main.container {
   font-weight: 900;
   cursor: pointer;
 }
+
+/* Track Claim page */
+.track-claim-page {
+  display: grid;
+  gap: 24px;
+}
+
+.track-claim-hero {
+  background: linear-gradient(135deg, #2E7D32, #176D35);
+  color: #FFFFFF;
+  border-radius: 26px;
+  padding: 28px;
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 22px;
+  align-items: center;
+  box-shadow: 0 14px 34px rgba(46, 125, 50, 0.22);
+}
+
+.track-claim-image {
+  width: 140px;
+  height: 120px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 46px;
+  font-weight: 900;
+  overflow: hidden;
+}
+
+.track-claim-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.track-claim-label {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.track-claim-heading h1 {
+  margin: 0 0 8px;
+  font-size: 36px;
+}
+
+.track-claim-heading p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.5;
+}
+
+.track-claim-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.track-claim-actions a {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: #2E7D32;
+  text-decoration: none;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.track-claim-progress-card,
+.track-info-card,
+.track-claim-next-step {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.06);
+}
+
+.track-claim-progress-card h2,
+.track-claim-next-step h2 {
+  margin: 0 0 20px;
+  color: #111827;
+}
+
+.track-flow {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr 80px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.track-flow--rejected {
+  grid-template-columns: 1fr 80px 1fr;
+}
+
+.track-step {
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  min-height: 150px;
+}
+
+.track-step-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+.track-step h3 {
+  margin: 0 0 8px;
+  color: #111827;
+}
+
+.track-step p {
+  margin: 0;
+  color: #667085;
+  line-height: 1.45;
+}
+
+.track-step--done {
+  background: #EAF7EF;
+  border-color: rgba(46, 125, 50, 0.24);
+}
+
+.track-step--done .track-step-dot {
+  background: #2E7D32;
+  color: #FFFFFF;
+}
+
+.track-step--waiting {
+  background: #F7F8FA;
+}
+
+.track-step--waiting .track-step-dot {
+  background: #D0D5DD;
+  color: #667085;
+}
+
+.track-step--rejected {
+  background: #FEECEC;
+  border-color: rgba(211, 47, 47, 0.25);
+}
+
+.track-step--rejected .track-step-dot {
+  background: #D32F2F;
+  color: #FFFFFF;
+}
+
+.track-step-line {
+  height: 4px;
+  border-radius: 999px;
+  background: #D0D5DD;
+}
+
+.track-step-line--done {
+  background: #2E7D32;
+}
+
+.track-claim-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.track-info-card span {
+  display: block;
+  color: #667085;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.track-info-card strong {
+  color: #111827;
+  line-height: 1.4;
+}
+
+.track-claim-next-step p {
+  margin: 0 0 16px;
+  color: #667085;
+  line-height: 1.5;
+}
+
+.track-claim-next-step a {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: #2E7D32;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-claim-next-step--rejected a {
+  background: #D32F2F;
+}
+
+@media (max-width: 980px) {
+  .track-claim-hero,
+  .track-flow,
+  .track-flow--rejected,
+  .track-claim-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .track-step-line {
+    height: 28px;
+    width: 4px;
+    margin: 0 auto;
+  }
+
+  .track-claim-actions {
+    width: 100%;
+  }
+}
