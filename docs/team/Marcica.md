@@ -102,8 +102,6 @@ My Sprint 4 task was to connect the existing claim flow to the rating system. Th
 First, I checked the existing project structure to see whether rating files already existed.
 
 Files checked:
-
-```text
 src/controllers
 src/routes
 src/views
