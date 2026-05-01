@@ -90,7 +90,7 @@ Actions:
 
 My Sprint 4 task was to connect the existing claim flow to the rating system. The rating option should only become available after a claim has been fully completed. This makes sure that users can only rate a real completed collection and not a pending, rejected, or unfinished claim.
 
-## Task Objectives
+### Task Objectives
 
 - Extend the claim flow so the rating option only appears after a claim status becomes `COMPLETED`.
 - Add permission logic to decide who is allowed to rate.
