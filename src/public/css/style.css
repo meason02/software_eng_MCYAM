@@ -3664,3 +3664,101 @@ main.container {
     grid-template-columns: 1fr;
   }
 }
+
+/* Fix Leaflet map overlapping navbar */
+.app-navbar {
+  z-index: 3000 !important;
+}
+
+.maps-shell-v2,
+.maps-content-v2,
+.maps-map-card-v2,
+.maps-leaflet-map-v2 {
+  position: relative;
+  z-index: 1;
+}
+
+.maps-map-card-v2 {
+  overflow: hidden;
+}
+
+.leaflet-container,
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 1 !important;
+}
+
+.leaflet-popup-pane {
+  z-index: 700 !important;
+}
+
+/* Working Maps toolbar controls */
+.maps-toolbar-v2__item--control {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.maps-toolbar-v2__item--control:not(.is-active) {
+  opacity: 0.55;
+}
+
+.maps-toolbar-v2__item--control:not(.is-active) .maps-toolbar-v2__toggle {
+  background: #D0D5DD;
+}
+
+.maps-toolbar-v2__item--control:not(.is-active) .maps-toolbar-v2__toggle::after {
+  right: auto;
+  left: 3px;
+}
+
+/* Maps sidebar icon and map zoom buttons */
+.maps-sidebar-v2__icon--pin {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 2px solid rgba(255, 255, 255, 0.48);
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.maps-sidebar-v2__icon--pin::before {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 14px;
+  width: 26px;
+  height: 26px;
+  background: #FFFFFF;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+
+.maps-sidebar-v2__icon--pin::after {
+  content: '';
+  position: absolute;
+  left: 31px;
+  top: 22px;
+  width: 10px;
+  height: 10px;
+  background: #2E7D32;
+  border-radius: 50%;
+  box-shadow: 0 29px 0 8px rgba(255, 255, 255, 0.18);
+}
+
+.maps-toolbar-v2__item--link {
+  background: transparent;
+  border-top: 0;
+  border-left: 0;
+  border-bottom: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.maps-toolbar-v2__item--link:hover strong,
+.maps-toolbar-v2__item--link:focus strong {
+  text-decoration: underline;
+}

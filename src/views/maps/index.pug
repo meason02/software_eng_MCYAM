@@ -11,20 +11,10 @@ block content
   .maps-shell-v2
     aside.maps-sidebar-v2
       .maps-sidebar-v2__top
-        .maps-sidebar-v2__icon 📍
+        .maps-sidebar-v2__icon.maps-sidebar-v2__icon--pin
         h2 Maps
         .maps-sidebar-v2__divider
         p View available food listings and approved pickup points across your local community.
-
-      .maps-sidebar-v2__section
-        h3 Legend
-        ul.maps-legend
-          li
-            span.maps-legend__dot.maps-legend__dot--pickup
-            span Approved pickup point
-          li
-            span.maps-legend__dot.maps-legend__dot--listing
-            span Available listing
 
       .maps-sidebar-v2__radius
         span Community radius:
@@ -36,21 +26,21 @@ block content
         p Browse available food listings and approved pickup points around University of Roehampton.
 
       .maps-toolbar-v2
-        .maps-toolbar-v2__item
+        button.maps-toolbar-v2__item.maps-toolbar-v2__item--link#zoomToCentre(type='button')
           span.maps-toolbar-v2__icon 🏛
           span Centre:
           strong University of Roehampton
 
-        .maps-toolbar-v2__item
+        button.maps-toolbar-v2__item.maps-toolbar-v2__item--link#showFullRadius(type='button')
           span.maps-toolbar-v2__icon ⦿
           span Radius:
           strong 10 miles
 
-        .maps-toolbar-v2__item
+        button.maps-toolbar-v2__item.maps-toolbar-v2__item--control.is-active#togglePickupPoints(type='button')
           .maps-toolbar-v2__toggle
           span Approved Pickup Points
 
-        .maps-toolbar-v2__item
+        button.maps-toolbar-v2__item.maps-toolbar-v2__item--control.is-active#toggleAvailableListings(type='button')
           .maps-toolbar-v2__toggle
           span Available Listings
 
@@ -61,7 +51,7 @@ block content
       .maps-map-card-v2
         #mcyamLeafletMap.maps-leaflet-map-v2
 
-      .maps-section-v2
+      .maps-section-v2#pickupPointsSection
         .maps-section-v2__head
           h2 Approved Pickup Points
           span.maps-section-v2__count= pickupPoints.length
@@ -74,7 +64,7 @@ block content
               p= point.address
               a(href=mapsSearch(point.address), target='_blank', rel='noopener') Open in Google Maps
 
-      .maps-section-v2
+      .maps-section-v2#availableListingsSection
         .maps-section-v2__head
           h2 Available Listings Nearby
           span.maps-section-v2__count= listings && listings.length ? listings.length : 0
@@ -131,13 +121,28 @@ block content
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
-      L.circle(centre, {
+      const radiusCircle = L.circle(centre, {
         radius: 16093,
         color: '#2E7D32',
         weight: 2,
         fillColor: '#2E7D32',
         fillOpacity: 0.10
       }).addTo(map);
+
+      const zoomToCentreButton = document.getElementById('zoomToCentre');
+      const showFullRadiusButton = document.getElementById('showFullRadius');
+
+      if (zoomToCentreButton) {
+        zoomToCentreButton.addEventListener('click', function () {
+          map.setView(centre, 15);
+        });
+      }
+
+      if (showFullRadiusButton) {
+        showFullRadiusButton.addEventListener('click', function () {
+          map.fitBounds(radiusCircle.getBounds());
+        });
+      }
 
       const pickupIcon = function (number) {
         return L.divIcon({
@@ -204,4 +209,28 @@ block content
             '<a href="/listings/' + listing.listing_id + '">View Details</a>'
           );
       });
+    const togglePickupButton = document.getElementById('togglePickupPoints');
+    const toggleListingsButton = document.getElementById('toggleAvailableListings');
+    const pickupSection = document.getElementById('pickupPointsSection');
+    const listingsSection = document.getElementById('availableListingsSection');
+
+    function setupSectionToggle(button, section) {
+      if (!button || !section) {
+        return;
+      }
+
+      button.addEventListener('click', function () {
+        const isHidden = section.style.display === 'none';
+
+        section.style.display = isHidden ? '' : 'none';
+        button.classList.toggle('is-active', isHidden);
+      });
+    }
+
+    setupSectionToggle(togglePickupButton, pickupSection);
+    setupSectionToggle(toggleListingsButton, listingsSection);
+
     });
+
+
+
